@@ -1,18 +1,33 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+	<div class="home">
+		<section>	
+			<h2>项目背景:</h2>
+			<p>"僵尸企业"一词最早由Kane(1987)提出，它是指陷入经营困境，但因获得放贷者或政府的支持而免于倒闭的负债企业。从定义可看出，僵尸企业具有盈利性差、负债率高和吸血性三个特征。</p>
+			<p>2016年7月，中国人民大学国家发展与战略研究院发布《中国僵尸企业研究报告——现状、原因和对策》（下称“报告”）。2005—2013年间，全国工业部门中僵尸企业数量约占工业企业总数的7.51%。按企业规模所做的不完全统计，大型、中型和小型企业中“僵尸企业”数量分别约1万家、5万家和13万家。报告针对1998—2015年上市公司数据库进行分析，上市公司中“僵尸企业”的数量在2013年达到高峰（约410家），此后数量有所下降，占比自2003年以来在13%左右波动。通过对十年以上存续期企业的考察和分析发现，国有企业的数量中有38.17%属于长期保持不变的僵尸企业，明显高于其他所有制的占比。</p>
+			<p>这些企业难以顺利从产业内退出，不符合产能结构调整方向。僵尸企业会影响经济可持续发展、破坏金融系统稳定性和阻碍我国经济转型升级。僵尸企业无经济效益却占用大量资源，降低资源配置效率。尽管僵尸企业无效益，却依然占有大量的土地、资本、能源、劳动力等资源，导致资源无法向收益更高的部门流动，造成了严重的资源浪费。他们无竞争实力却扰乱市场秩序，还以稳定为借口占据社会资金。而且无偿债能力却吸纳大量企业拆借与银行贷款，易引发金融风险。</p>
+			<p>治理僵尸企业既是完成各项经济任务的重要突破口，也是保障未来经济健康持续高速发展的重要手段，另一方面，在2016年时将其上升至国家意志层面，中央的高度重视为其提供有效的清退方案，各项政策措施也积极帮助解决其后顾之忧，下决心清理“僵尸企业”，啃下并消化好这块硬骨头。这是中国经济优化资源配置的关键，也在某种程度上实现中国经济“供给端”的真正升级，如果下决心破除地方政府和部门的干扰，按照市场的法则让“僵尸企业”出局，产业竞争的思维才能发生质的飞跃。只有勇于破解“僵尸企业”难题，克服改革“阵痛”，促进经济结构不断优化，才是实现经济良性稳步发展的题中之义。</p>
+		</section>
+		
+		<section>
+			<h2>操作说明:</h2>
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolorum error id porro incidunt est esse praesentium quas dolor dicta eligendi minima illum iure rerum tempore iste assumenda quo magnam in iusto repellat excepturi eos ratione. Adipisci nostrum totam earum perferendis asperiores et reiciendis dolores cum unde nesciunt corrupti cumque sed non debitis tempore officiis ducimus consectetur provident modi magnam. Ea!</p>
+		</section>
+	</div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
-
-export default {
-  name: 'Home',
-  components: {
-    HelloWorld
-  }
+export default{
+	mounted() {
+		// this.$loading()
+	}
 }
 </script>
+
+<style>
+.home section{
+	margin: 15px 0;
+	border-bottom: var(--border1);
+	padding-bottom: 10px;
+	user-select: none;
+}
+</style>

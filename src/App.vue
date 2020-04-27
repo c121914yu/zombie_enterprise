@@ -1,32 +1,58 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
+		<Nav></Nav>
+		<div class="view">
+			<Head></Head>
+			<keep-alive>
+				<router-view class="container"/>
+			</keep-alive>
+		</div>
   </div>
 </template>
 
+<script>
+import Nav from "./components/Nav.vue"
+import Head from "./components/Head.vue"
+export default{
+	components:{
+		Nav,
+		Head
+	}
+}
+</script>
+
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+@import url("./assets/common.css");
+@import url("./assets/icon/iconfont.css");
+#app{
+	width: 100%;
+	min-height: 100vh;
+	background-color: #f9f9f9;
 }
 
-#nav {
-  padding: 30px;
+.view{
+	width: calc(100%-200px);
+	margin-left: 200px;
+	height: 100%;
+	padding: 20px 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
 }
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
+.view .container{
+	width: 80%;
+	height: 100%;
 }
-
-#nav a.router-link-exact-active {
-  color: #42b983;
+@media (max-width:1100px){
+	.view .container{
+		width: 90%;
+	}
+}
+@media (max-width:800px) {
+	.view{
+		margin-top: 60px;
+		margin-left: 0;
+	}
 }
 </style>

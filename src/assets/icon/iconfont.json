@@ -1,0 +1,51 @@
+{
+  "id": "1548346",
+  "name": "cloud_link",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "2131807",
+      "name": "警告",
+      "font_class": "warn",
+      "unicode": "e64c",
+      "unicode_decimal": 58956
+    },
+    {
+      "icon_id": "7240870",
+      "name": "错误",
+      "font_class": "error",
+      "unicode": "e676",
+      "unicode_decimal": 58998
+    },
+    {
+      "icon_id": "7764544",
+      "name": "确认 正确",
+      "font_class": "success",
+      "unicode": "e60a",
+      "unicode_decimal": 58890
+    },
+    {
+      "icon_id": "1894503",
+      "name": "垃圾桶",
+      "font_class": "lajitong",
+      "unicode": "e638",
+      "unicode_decimal": 58936
+    },
+    {
+      "icon_id": "6118649",
+      "name": "对",
+      "font_class": "dui",
+      "unicode": "e6b6",
+      "unicode_decimal": 59062
+    },
+    {
+      "icon_id": "13954063",
+      "name": "下拉1",
+      "font_class": "xiala",
+      "unicode": "e601",
+      "unicode_decimal": 58881
+    }
+  ]
+}
