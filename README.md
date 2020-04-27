@@ -1,19 +1,9 @@
-# enterprise
+# 僵尸企业画像
 
-## Project setup
-```
-npm install
-```
+## 指令
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+> npm install - 安装依赖
+> npm install name -S   - 安装包
+> npm run serve - 启动开发环境
+> npm run build - 打包
 
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
