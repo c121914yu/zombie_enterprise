@@ -37,4 +37,4 @@ jobs:
           SOURCE: "dist/"  
           REMOTE_HOST: "49.232.38.113"  
           REMOTE_USER: "root"   
-          TARGET: "/www/wwwroot/jinlongyuchitang.cn/autodeploy/"
+          TARGET: "/File/僵尸企业画像/dist/"
