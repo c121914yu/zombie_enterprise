@@ -28,6 +28,7 @@ export default{
 	width: 100%;
 	min-height: 100vh;
 	background-color: #f9f9f9;
+	position: relative;
 }
 
 .view{
@@ -51,6 +52,7 @@ export default{
 }
 @media (max-width:800px) {
 	.view{
+		width: 100%;
 		margin-top: 60px;
 		margin-left: 0;
 	}
