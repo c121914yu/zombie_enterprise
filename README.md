@@ -7,3 +7,5 @@
 > npm run serve - 启动开发环境  
 > npm run build - 打包  s
 
+## 1.0.0
+静态界面
