@@ -88,4 +88,10 @@ export default{
 .toast p{
 	color: inherit;
 }
+
+@media (max-width:600px) {
+	.toast{
+		width: 70%;
+	}
+}
 </style>

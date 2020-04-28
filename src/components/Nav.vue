@@ -163,5 +163,8 @@ export default{
 		width: 100%;
 		justify-content: space-around;
 	}
+	.nav .list .item{
+		margin: 0;
+	}
 }
 </style>
