@@ -1,9 +1,5 @@
 <template>
-	<div 
-		class="nav" 
-		:style="'opacity:' + opacity "
-		@mouseenter="opacity=1"
-	>
+	<div class="nav" >
 		<img src="http://blogs.jinlongyuchitang.cn/background.jpg" class="logo">
 		<h3>僵尸企业画像</h3>
 		<div class="list">
@@ -21,10 +17,10 @@
 </template>
 
 <script>
+var navEl
 export default{
 	data(){
 		return{
-			opacity: 1,
 			navs: [
 				{text:"主页",name:'home',active:false},
 				{text:"单个识别",name:'single',active:false},
@@ -46,17 +42,18 @@ export default{
 		}
 	},
 	mounted() {
+		navEl = document.querySelector(".nav")
 		this.routeChange()
 		window.onscroll = () => {
 			if(window.innerWidth > 800){
-				this.opacity = 1
+				navEl.classList.remove("lucency")
 				return
 			}
 		  let scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
 		  if(scrollTop > 80)
-		    this.opacity = 0.5
+		    navEl.classList.add("lucency")
 		  else
-		    this.opacity = 1
+		    navEl.classList.remove("lucency")
 		}
 	}
 }
@@ -76,6 +73,13 @@ export default{
 	align-items: center;
 	background-color: rgba(91,143,249,0.05);
 	box-shadow: 5px 0 5px rgba(91,143,249,0.2);
+	opacity: 1;
+}
+.nav.lucency{
+	opacity: 0.5;
+}
+.nav.lucency:hover{
+	opacity: 1;
 }
 
 .nav .logo{
