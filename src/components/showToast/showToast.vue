@@ -32,29 +32,33 @@ export default{
 
 <style scoped>
 .toast{
+	z-index: 99;
 	position: fixed;
 	left: 50%;
 	transform: translateX(-50%);
 	width: 50%;
 	max-width: 450px;
 	height: 40px;
-	color: #FFFFFF;
 	line-height: 40px;
+	border: var(--border2);
 	border-radius: 10px;
+	box-shadow: var(--box-shadow2);
 	overflow: hidden;
-	z-index: 99;
 	display: flex;
 	align-items: center;
 	animation: create 2s ease-out;
 }
 .toast.success{
-	background-color: #67C23A;
+	color: #67c23a;
+	background-color: #f0f9eb;
 }
 .toast.error{
-	background-color: #F56C6C;
+	color: #f56c6c;
+	background-color: #fef0f0;
 }
 .toast.warn{
-	background-color: #E6A23C;
+	color: #e6a23c;
+	background-color: #fdf6ec;
 }
 
 @keyframes create{
@@ -79,9 +83,9 @@ export default{
 .toast i{
 	margin: 0 20px;
 	font-size: 1.2em;
-	color: #FFFFFF;
+	color: inherit;
 }
 .toast p{
-	color: #FFFFFF;
+	color: inherit;
 }
 </style>

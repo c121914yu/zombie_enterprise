@@ -9,6 +9,8 @@ Vue.config.productionTip = false
 const echarts = require('echarts')
 Vue.prototype.$echarts = echarts
 
+import showModel from "./components/showModel/showModel.js"
+Vue.prototype.$showModel = showModel
 import showToast from "./components/showToast/showToast.js"
 Vue.prototype.$showToast = showToast
 import loading from "./components/loading/loading.js"

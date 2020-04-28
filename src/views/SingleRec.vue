@@ -7,7 +7,7 @@
 			<p class="remark">金额单位: 万元人民币</p>
 			<!-- 年份选择 -->
 			<div class="years">
-				<p title="复制第一年数据" class="copy" @click="copy">拷贝</p>
+				<p title="复制第一年数据" class="copy" @click="copy">填充</p>
 				<div 
 					class="year"
 					:class="currentYear === item ? 'active' : ''"
@@ -103,8 +103,16 @@ export default{
 			this.currentYear = temp
 		},
 		copy(){ //拷贝第一年信息
-			this.Data[this.currentYear] = {...this.Data.first}
-			this.update()
+			this.$showModel({
+				text: "确定使用第一年的数据填充当前年份空白数据？",
+				cancelText: "取消",
+				success: () => {
+					for(let key in this.Data.first)
+						if(this.Data[this.currentYear][key] === "")
+							this.Data[this.currentYear][key] = this.Data.first[key]
+					this.update()
+				}
+			})
 		},
 		submit(e){
 			e.preventDefault()
