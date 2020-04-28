@@ -150,4 +150,14 @@ export default{
 		transform: scale(1.1);
 	}
 }
+
+@media (max-width:500px){
+	.nav h3{
+		display: none;
+	}
+	.nav .list{
+		width: 100%;
+		justify-content: space-around;
+	}
+}
 </style>
