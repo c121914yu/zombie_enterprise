@@ -25,9 +25,9 @@ export default{
 				code: 1,
 				error_msg: "",
 				data: {
-					proba_normal: 0.8,
-					proba_zombie: 0.2,
-					final_pre: 1
+					proba_normal: 0.04457433086273716,
+					proba_zombie: 0.9554256691372628,
+					final_pre: 0.0
 				},
 				time: 50000
 			}
@@ -35,12 +35,14 @@ export default{
 	},
 	mounted() {
 		let option = {
+			tooltip: {
+				
+			},
 			series : [
 				{
 					name : "识别结果",
 					type: 'pie',
 					label: {
-						formatter: '{b}:{c}',
 						fontSize: 16
 					},
 					data: [

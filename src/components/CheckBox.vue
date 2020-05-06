@@ -1,6 +1,10 @@
 <template>
 	<div class="check-box">
-		<p class="check-text" :class="checkText === '' ? 'placeholder' : ''">
+		<p 
+			class="check-text" 
+			:class="checkText === '' ? 'placeholder' : ''"
+			@mouseenter="hover"
+		>
 			{{checkText === "" ? "选择测试模型" : checkText}}
 		</p>
 		<i class="iconfont icon-xiala xiala"></i>
@@ -20,6 +24,7 @@
 </template>
 
 <script>
+var timer
 export default{
 	props:{
 		models: {
@@ -27,6 +32,15 @@ export default{
 			default : () => {
 				return [{name:"无数据"}]
 			}
+		}
+	},
+	methods:{
+		hover(e){
+			document.querySelector(".models").className = "models"
+			if(document.body.offsetHeight - e.pageY < 100)
+				document.querySelector(".models").classList.add("up")
+			else
+				document.querySelector(".models").classList.add("down")
 		}
 	},
 	computed:{
@@ -55,6 +69,12 @@ export default{
 	align-items: center;
 	position: relative;
 }
+.check-box:hover{
+	z-index: 5;
+}
+.check-box p{
+	width: 100%;
+}
 
 .check-box .xiala{
 	position: absolute;
@@ -64,19 +84,33 @@ export default{
 
 .check-box .models{
 	position: absolute;
-	transform: translateY(-100%);
-	top: -2px;
 	left: 0;
 	height: 0;
 	width: 100%;
 	background-color: #FFFFFF;
-	border-top-right-radius: 10px;
-	border-top-left-radius: 10px;
 	box-shadow: var(--box-shadow2);
 	transition: var(--hover-speed);
 	overflow: hidden;
 	cursor: pointer;
 }
+.check-box:hover .models.up,
+.check-box:hover .models.down{
+	height: 135px;
+}
+.check-box .models.up{
+	height: 0;
+	top: -2px;
+	transform: translateY(-100%);
+	border-top-right-radius: 10px;
+	border-top-left-radius: 10px;
+}
+.check-box .models.down{
+	height: 0;
+	top: 35px;
+	border-bottom-right-radius: 10px;
+	border-bottom-left-radius: 10px;
+}
+
 .check-box .models .item{
 	height: 45px;
 	line-height: 45px;
@@ -95,9 +129,6 @@ export default{
 	margin-left: 10px;
 }
 
-.check-box:hover .models{
-	height: 135px;
-}
 .check-box:hover .xiala{
 	transform: rotate(180deg);
 }

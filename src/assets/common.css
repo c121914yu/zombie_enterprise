@@ -90,6 +90,15 @@ input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {
 	-webkit-appearance: none;margin: 0;
 }
+input[type=file]{
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 0;
+	height: 0;
+	opacity: 0;
+	cursor: pointer;
+}
 
 h1{
 	font-size: 2em;

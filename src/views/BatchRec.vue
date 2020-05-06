@@ -27,12 +27,16 @@
 				</div>
 			</div>
 		</form>
+		
+		<charts v-if="showResult" :enterprise="enterprise"></charts>
 	</div>
 </template>
 
 <script>
 import checkBox from "../components/CheckBox.vue"
 import check from "../components/Check.vue"
+import charts from "../components/charts.vue"
+import {getFile} from "../assets/axios/api.js"
 export default{
 	data(){
 		return{
@@ -47,7 +51,9 @@ export default{
 				{name: "kno.csv",file: ""},
 				{name: "year.csv",file: ""}
 			],
-			is_impute: true
+			is_impute: true,
+			enterprise: [],
+			showResult: false
 		}
 	},
 	methods:{
@@ -59,13 +65,15 @@ export default{
 				kno: 2,
 				year: 3
 			}
-			files.forEach(item => {
-				if(item.name.indexOf(".csv") > -1){
-					const key = item.name.replace(".csv","")
+		
+			files.forEach(file => {
+				if(file.name.indexOf(".csv") > -1){
+					const key = file.name.replace(".csv","")
 					if(keys.hasOwnProperty(key)){
+						// 获取对应变量
+						let reader = new FileReader()
 						// 转化成base64
-						var reader = new FileReader()
-						reader.readAsDataURL(item)
+						reader.readAsDataURL(file)
 						reader.onload = (e) => {
 							this.files[keys[key]].file = e.target.result
 						}
@@ -79,20 +87,37 @@ export default{
 		submit(e){
 			e.preventDefault()
 			// 判断文件是否齐全
-			for(let i=0;i<this.files.length;i++)
-				if(this.files[i].file === ""){
-					this.$showToast({
-						type: "warn",
-						text: "文件未齐全"
-					})
-					return
+			// for(let i=0;i<this.files.length;i++)
+			// 	if(this.files[i].file === ""){
+			// 		this.$showToast({
+			// 			type: "warn",
+			// 			text: "文件未齐全"
+			// 		})
+			// 		return
+			// 	}
+			fetch("../featured_data_single.json")
+			.then(res => res.json())
+			.then(data => {
+				let i = 0
+				let temp = []
+				for(let key in data){
+					temp.push(data[key])
+					i++
+					if(i === 3){
+						this.enterprise.push(temp)
+						i = 0
+						temp = []
+					}
 				}
-			console.log(11)
+				console.log(this.enterprise)
+				this.showResult = true
+			})
 		}
 	},
 	components:{
 		checkBox,
-		check
+		check,
+		charts
 	}
 }
 </script>

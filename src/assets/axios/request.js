@@ -5,7 +5,8 @@ var load
 
 // 创建实例
 const service = axios.create({
-	baseURL : process.env.VUE_APP_BASEURL,
+	// baseURL : process.env.VUE_APP_BASEURL,
+	baseURL: "",
 	timeout : 10000
 })
 

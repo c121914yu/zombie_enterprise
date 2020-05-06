@@ -69,6 +69,9 @@ export default{
 	align-items: center;
 	position: relative;
 }
+.select:hover{
+	z-index: 5;
+}
 .select .xiala{
 	position: absolute;
 	right: 10px;
