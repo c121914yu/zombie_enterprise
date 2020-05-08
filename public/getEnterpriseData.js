@@ -10,8 +10,8 @@ onmessage = function(e) {
 				continue
 			let year = ""
 			if(title.indexOf("year") > -1){ // 包含年份
+				year = dataList[title.indexOf("year")]
 				title[title.indexOf("year")] = "第几年的企业信息"
-				year = dataList[1]
 			}
 			dataList.forEach((val,index) => {
 				let keyText = title[index]

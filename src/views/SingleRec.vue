@@ -18,23 +18,57 @@
 				<h3>企业信息</h3>
 				<label class="check-file btn">
 					<input type="file" @change="checkFile" multiple>
-					导入数据
+					csv导入
 				</label>
 				
 				<div 
+					class="btn"
+					@click="addEn">
+					增加企业
+				</div>
+				
+				<div
+					v-if="resultID.length > 0"
+					class="btn"
+					@click="removeEn">
+					删除当前企业
+				</div>
+				
+				<div
+					v-if="resultID.length > 0"
 					class="btn" 
 					:class="isOperate ? 'active' : ''"
-					@click="isOperate=!isOperate"
-				>
+					@click="isOperate=!isOperate">
 					{{isOperate ? "隐藏输入" : "手动填写"}}
 				</div>
 				
-				<div class="list">
+				<div class="id" v-if="Data[currentIndex]">
+					<span>ID:</span>
+					<input 
+						type="number"
+						placeholder="当前企业编号ID"
+						min=0
+						step="1"
+						@input="inputID"
+						:value="Data[currentIndex][0].ID"
+					>
+				</div>
+				
+				<div class="page" v-show="resultID.length > 0">
 					<i 
 						class="iconfont icon-last"
 						@click="changeIndex(-1)"
 					></i>
-					<p>{{resultID.length === 0 ? currentIndex : currentIndex+1}} / {{resultID.length}}</p>
+					<p>
+						<input 
+							class="current-index"
+							type="number"
+							step="1"
+							:value="currentIndex+1"
+							@input="inputIndex"
+							@focusout="outInputIndex"
+						>
+						/ {{resultID.length}}</p>
 					<i 
 						class="iconfont icon-next"
 						@click="changeIndex(1)"
@@ -77,6 +111,7 @@
 				</div>
 				<div class="content">
 					<div 
+						 v-if="index!=0"
 						class="item"
 						v-for="(item,index) in inputs"
 						:key="index"
@@ -88,7 +123,7 @@
 								:placeholder="item.text"
 								min=0
 								:step="item.step"
-								v-model="Data[currentIndex][currentYear][item.model]"
+								v-model.number="Data[currentIndex][currentYear][item.model]"
 								@input="update()"
 							>
 							<i 
@@ -140,6 +175,13 @@ export default{
 		}
 	},
 	methods:{
+		inputID(e){
+			const val = e.target.value
+			this.Data[this.currentIndex].forEach(item => {
+				item.ID = +val
+			})
+			this.update()
+		},
 		changeIndex(index){
 			if(this.resultID.length === 0) return
 			let tempIndex = this.currentIndex + index
@@ -149,17 +191,43 @@ export default{
 				tempIndex = this.resultID.length - 1
 			this.getCurrentData(tempIndex)
 		},
-		addDataLen(ID=""){
-			this.Data.push([
-				{...this.$store.state.param,ID},
-				{...this.$store.state.param,ID},
-				{...this.$store.state.param,ID}
-			])
+		inputIndex(e){
+			setTimeout(() => {
+				const dom = document.querySelector(".current-index")
+				let len = dom.value.length
+				dom.style.width = `${10*len}px`
+			})
+		},
+		outInputIndex(e){
+			const val = +e.target.value
+			if(val > 0 && val <= this.resultID.length)
+				this.getCurrentData(val - 1)
+			else{
+				this.$showToast({
+					type: "warn",
+					text: "超出范围"
+				})
+				this.getCurrentData(this.currentIndex)
+			}
+		},
+		addEn(){
+			let ID = (+new Date()).toString().substr(8)
+			while(this.resultID.indexOf(ID) > 1){
+				ID = (+new Date()).toString().substr(8)
+			}
+			let index = this.resultID.push(+ID)
+			this.getCurrentData(index - 1)
+		},
+		removeEn(){
+			this.resultID.splice(this.currentIndex,1)
+			this.Data.splice(this.currentIndex,1)
+			this.changeIndex(-1)
 		},
 		update(){ //解决层级嵌套不更新问题
 			const temp = this.currentYear
 			this.currentYear = ""
 			this.currentYear = temp
+			this.inputIndex()
 		},
 		checkFile(e){ //选择文件
 			let load = this.$loading()
@@ -212,11 +280,16 @@ export default{
 			})
 			worker.onmessage = (e) => {
 				worker.terminate()
+				setTimeout(() => {
+					load.hide()
+				},200)
 				this.Data[index] = e.data.enterprise
 				this.fileData = e.data.fileData
 				this.currentIndex = index
+				this.currentYear = 0
+				this.isOperate = false
+				this.isOperate = true
 				this.update()
-				load.hide()
 			}
 		},
 		copy(){ //拷贝第一年信息
@@ -239,19 +312,19 @@ export default{
 				modelType[item.param] = item.active 
 			})
 			// 将data里字符串数字转化成数字类型
-			const newData = {...this.Data}
-			for(let year in this.Data)
-				for(let key in this.Data[year])
-					if(newData[year][key] != "")
-						newData[year][key] = +newData[year][key]
+			// const newData = {...this.Data}
+			// for(let year in this.Data)
+			// 	for(let key in this.Data[year])
+			// 		if(newData[year][key] != "")
+			// 			newData[year][key] = +newData[year][key]
 						
-			// 构建参数
-			const data = {
-				...modelType,
-				is_impute: this.is_impute,
-				data: newData
-			}
-			console.log(data)
+			// // 构建参数
+			// const data = {
+			// 	...modelType,
+			// 	is_impute: this.is_impute,
+			// 	data: newData
+			// }
+			console.log(this.Data)
 		}
 	},
 	created() {
@@ -293,7 +366,9 @@ export default{
 .single .container .slide{
 	padding: 10px;
 	display: flex;
+	flex-wrap: wrap;
 	align-items: center;
+	position: relative;
 }
 .single .container .slide .btn{
 	margin-left: 15px;
@@ -312,22 +387,41 @@ export default{
 .single .container .slide .btn:active{
 	transform: scale(0.95);
 }
-.single .container .slide .list{
+.single .container .slide .id{
+	margin-left: 15px;
+	display: flex;
+	align-items: center;
+	position: relative;
+}
+.single .container .slide .id span{
 	position: absolute;
+	left: 5px;
+	color: var(--dark-common);
+}
+.single .container .slide .id input{
+	width: 150px;
+	padding-left: 30px;
+}
+.single .container .slide .page{
+	position: absolute;
+	top: 10px;
 	right: 15px;
 	display: flex;
 	align-items: center;
 }
-.single .container .slide .list i{
+.single .container .slide .page i{
 	margin: 0 5px;
 	font-size: 1.2em;
 	font-weight: 600;
 	cursor: pointer;
 }
-.single .container .slide .list .main{
-	display: flex;
-	flex-direction: column;
-	align-items: center;
+.single .container .slide .page .current-index{
+	width: 14px;
+	color: #FFFFFF;
+	padding: 0;
+	background-color: transparent;
+	border: 0;
+	text-align: right;
 }
 
 .single form{
@@ -436,6 +530,21 @@ export default{
 	transform: scale(1.1);
 }
 
+@media (max-width:1230px) {
+	.single .container .slide h3{
+		width: 100%;
+		text-align: center;
+	}
+	.single .container .slide{
+		justify-content: center;
+	}
+	.single .container .slide .btn{
+		margin-top: 5px;
+	}
+	.single .container .slide .id{
+		margin-top: 5px;
+	}
+}
 @media (max-width:1100px) {
 	.single .container .content{
 		grid-template-columns: repeat(2,1fr);
@@ -458,15 +567,25 @@ export default{
 		justify-content: center;
 	}
 }
-
+@media (max-width:900px) {
+	.single .container .slide .btn{
+		margin-left: 5px;
+	}
+	.single .container .slide .id{
+		margin-left: 5px;
+	}
+}
 @media (max-width:600px){
-	.single form .content{
-		grid-template-columns: 1fr;
+	.single .container .slide .btn{
+		margin-left: 5px;
 	}
 	.single form .years{
 		position: relative;
 		left: 50%;
 		transform: translateX(-50%);
+	}
+	.single form .content{
+		grid-template-columns: 1fr;
 	}
 }
 </style>

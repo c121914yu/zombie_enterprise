@@ -53,13 +53,13 @@ export default new Vuex.Store({
 		],
 		inputs: [
 			{text:"ID",step:1,model:"ID"},
-			{text:"第几年的企业信息",step:1,model:"year"},
 			{text:"注册时间",step:1,model:"regist_time"},
 			{text:"注册资本",step:0.01,model:"capital"},
 			{text:"控制人持股比例",step:0.01,model:"main_equity_per"},
 			{text:"专利",step:1,model:"patent_num"},
 			{text:"商标",step:1,model:"brand_num"},
 			{text:"著作权",step:1,model:"copyright_num"},
+			{text:"第几年的企业信息",step:1,model:"year"},
 			{text:"债权融资额度",step:0.01,model:"debet_quota"},
 			{text:"债权融资成本",step:0.01,model:"debet_cost"},
 			{text:"股权融资额度",step:0.01,model:"equity_quota"},
@@ -109,7 +109,8 @@ export default new Vuex.Store({
 			tax: "",
 			total_equity: ""
 		},
-  },
+		fileData: []
+	},
   mutations: {
   },
   actions: {
