@@ -34,10 +34,7 @@
 						class="iconfont icon-last"
 						@click="changeIndex(-1)"
 					></i>
-					<div class="main">
-						
-						<p>{{currentIndex+1}} / {{Data.length}}</p>
-					</div>
+					<p>{{resultID.length === 0 ? currentIndex : currentIndex+1}} / {{resultID.length}}</p>
 					<i 
 						class="iconfont icon-next"
 						@click="changeIndex(1)"
@@ -45,7 +42,9 @@
 				</div>
 			</div>
 			
-			<form :style="isOperate ? 'max-height: 5000px' : 'max-height: 0'">
+			<form 
+				v-if="Data.length>0"
+				:style="isOperate ? 'max-height: 5000px' : 'max-height: 0'">
 				<p class="remark">金额单位: 万元人民币</p>
 				<!-- 年份选择 -->
 				<div class="years">
@@ -124,7 +123,7 @@ export default{
 	data(){
 		return{
 			currentIndex: 0,
-			datas: [],
+			searchText: "",
 			currentYear: 0,
 			isOperate: false,
 			is_impute: true,
@@ -135,26 +134,27 @@ export default{
 				{name: "stacking模型",active: false,param: "use_model_stacking"},
 				{name: "deeptree模型",active: false,param: "use_model_deeptree"}
 			],
-			Data: []
+			Data: [],
+			resultID: [],
+			fileData: []
 		}
 	},
 	methods:{
 		changeIndex(index){
-			const tempIndex = this.currentIndex + index
-			if(tempIndex === this.Data.length)
-				this.currentIndex = 0
-			else if(tempIndex === 0)
-				this.currentIndex = this.Data.length - 1
-			else
-				this.currentIndex = tempIndex
+			if(this.resultID.length === 0) return
+			let tempIndex = this.currentIndex + index
+			if(tempIndex === this.resultID.length)
+				tempIndex = 0
+			else if(tempIndex === -1)
+				tempIndex = this.resultID.length - 1
+			this.getCurrentData(tempIndex)
 		},
 		addDataLen(ID=""){
-			this.Data[this.Data.length] = [
+			this.Data.push([
 				{...this.$store.state.param,ID},
 				{...this.$store.state.param,ID},
 				{...this.$store.state.param,ID}
-			]
-			// console.log(this.Data)
+			])
 		},
 		update(){ //解决层级嵌套不更新问题
 			const temp = this.currentYear
@@ -162,85 +162,62 @@ export default{
 			this.currentYear = temp
 		},
 		checkFile(e){ //选择文件
-			const files = Array.from(e.target.files) 
-			files.forEach(file => {
-				let reader = new FileReader()
-				reader.readAsText(file);
-				reader.onload = (e) => {
-					let result = e.target.result.split("\n")
-					result.splice(result.length-1,1)
-					// 将字符串转数字
-					result.forEach((item,i) => {
-						item = item.trim()
-						item = item.split(",")
-						item.forEach((data,index) => {
-							if(data != "" && !isNaN(+data))
-								item[index] = +data
-						})
-						result[i] = item
-					})
-					
-					const title = result[0]
-					result.splice(0,1)
-					
-					result.forEach(item => {
-						const id = item[0]
-						// 找到已存在的企业，若不存在则追加
-						let enterprise = this.Data.find(item => {
-							return item[0].ID === id
-						})
-						if(!enterprise){
-							this.addDataLen(id)
-							enterprise = this.Data[this.Data.length-1]
-						}
-						// 查找key值对应的变量
-						const tempArr = [].concat(this.selects,this.inputs)
-						// 判断是否是分不同年份
-						let year = ""
-						if(title.indexOf("year") > -1){
-							year = item[1]
-							enterprise.find((en,i) => {
-								if(en.year === ""){
-									en.year = year
-									return true
-								}
-							})
-						}
-						item.forEach((val,index) => {
-							let keyText = title[index]
-							
-							if(keyText === "year") return false
-							
-							let key = tempArr.find(param => keyText === param.text)
-							if(key){
-								if(key.hasOwnProperty("list")){
-									const selectRes = key.list.find(content => {
-										if(content.label === val){
-											val = content.value
-											return true
-										}
-									})
-								}
-								// 含年份信息
-								if(year != "")
-									enterprise.find((en,i) => {
-										if(en.year === year){
-											enterprise[i][key.model] = val
-											return true
-										}
-									})
-								// 不含年份信息
-								else
-									enterprise.forEach(en => {
-										en[key.model] = val
-									})
-							}
-						})
-					})
-					this.update()
-					console.log(this.Data)
-				}
+			let load = this.$loading()
+			this.Data.forEach(item => {
+				item[0].loaded = false
 			})
+			let worker = new Worker('./computedID.js')
+			worker.postMessage({
+				files: Array.from(e.target.files),
+				resultID: this.resultID
+			})
+			worker.onmessage = (e) => {
+				worker.terminate()
+				this.fileData = this.fileData.concat(e.data.fileData)
+				this.resultID = e.data.resultID
+				load.hide()
+				this.getCurrentData(this.currentIndex)
+			}
+		},
+		getCurrentData(index){ //获取当前企业的信息
+			let enterprise
+			// 如果当前下标的<已加载的数据长度，则直接显示
+			if(this.Data[index] && index < this.Data.length){
+				if(this.Data[index][0].loaded === true){
+					this.currentIndex = index
+					this.update()
+					return
+				}
+				else{
+					enterprise = this.Data[index]
+					enterprise[0].loaded = true
+				}
+			}
+			else{
+				let param = this.$store.state.param
+				let ID = this.resultID[index]
+				enterprise = [
+					{...param,ID,loaded:true},
+					{...param,ID},
+					{...param,ID}
+				]
+			}	
+			
+			let load = this.$loading()
+			let worker = new Worker('./getEnterpriseData.js')
+			worker.postMessage({
+				enterprise,
+				tempArr: [].concat(this.selects,this.inputs),
+				fileData: this.fileData,
+			})
+			worker.onmessage = (e) => {
+				worker.terminate()
+				this.Data[index] = e.data.enterprise
+				this.fileData = e.data.fileData
+				this.currentIndex = index
+				this.update()
+				load.hide()
+			}
 		},
 		copy(){ //拷贝第一年信息
 			this.$showModel({
@@ -280,7 +257,6 @@ export default{
 	created() {
 		this.selects = [...this.$store.state.selects]
 		this.inputs = [...this.$store.state.inputs]
-		this.addDataLen()
 	},
 	components:{
 		checkBox,
@@ -338,16 +314,20 @@ export default{
 }
 .single .container .slide .list{
 	position: absolute;
-	left: 50%;
-	transform: translateX(-50%);
+	right: 15px;
 	display: flex;
-	align-items: flex-start;
+	align-items: center;
 }
 .single .container .slide .list i{
 	margin: 0 5px;
 	font-size: 1.2em;
 	font-weight: 600;
 	cursor: pointer;
+}
+.single .container .slide .list .main{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 }
 
 .single form{
@@ -400,7 +380,8 @@ export default{
 	font-size: 1.1em;
 	user-select: none;
 }
-.single form .content .item .input{
+.single form .content .item .input,
+.single .container .slide .list .main{
 	margin-top: 2px;
 	position: relative;
 	height: 35px;
@@ -410,7 +391,8 @@ export default{
 	width: 100%;
 	height: 100%;
 }
-.single form .content .item .input input:focus{
+.single form .content .item .input input:focus,
+.single .container .slide .list .main input:focus{
 	border-color: var(--blue1);
 	box-shadow: 0 0 10px #3775f1;
 }
