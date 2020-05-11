@@ -116,11 +116,11 @@
 						v-for="(item,index) in inputs"
 						:key="index"
 					>
-						<p>{{item.text}}</p>
+						<p>{{item.text === "year" ? "第几年企业信息" : item.text}}</p>
 						<div class="input">
 							<input
 								type="number" 
-								:placeholder="item.text"
+								:placeholder="item.text === 'year' ? '第几年企业信息' : item.text"
 								min=0
 								:step="item.step"
 								v-model.number="Data[currentIndex][currentYear][item.model]"
@@ -144,7 +144,7 @@
 			</div>
 		</div>
 		
-		<!-- <result></result> -->
+		<result></result>
 	</div>
 </template>
 
@@ -153,7 +153,7 @@ import checkBox from "../components/CheckBox.vue"
 import check from "../components/Check.vue"
 import Select from "../components/Select.vue"
 import result from "../components/Result.vue"
-import XLSX from "xlsx"
+import {Predict} from "../assets/axios/api.js"
 export default{
 	data(){
 		return{
@@ -284,7 +284,6 @@ export default{
 					load.hide()
 				},200)
 				this.Data[index] = e.data.enterprise
-				this.fileData = e.data.fileData
 				this.currentIndex = index
 				this.currentYear = 0
 				this.isOperate = false
@@ -306,25 +305,43 @@ export default{
 		},
 		submit(e){
 			e.preventDefault()
+			let startTime = +(new Date())
+			let load = this.$loading()
 			// 判断使用了什么模型
 			const modelType = {}
 			this.models.forEach(item => {
 				modelType[item.param] = item.active 
 			})
-			// 将data里字符串数字转化成数字类型
-			// const newData = {...this.Data}
-			// for(let year in this.Data)
-			// 	for(let key in this.Data[year])
-			// 		if(newData[year][key] != "")
-			// 			newData[year][key] = +newData[year][key]
-						
-			// // 构建参数
-			// const data = {
-			// 	...modelType,
-			// 	is_impute: this.is_impute,
-			// 	data: newData
-			// }
-			console.log(this.Data)
+			let resSrt = ""
+			let worker = new Worker("./cutCsv.js")
+			worker.postMessage({
+				resultID: this.resultID,
+				Data: this.Data,
+				fileData: this.fileData,
+				tempArr: [].concat(this.selects,this.inputs),
+				param : this.$store.state.param
+			})
+			worker.onmessage = (e) => {
+				const data = {
+					is_impute: this.is_impute,
+					...modelType,
+					merged: e.data
+				}
+				load.hide()
+				console.log("字符串转化时间: " + (new Date() - startTime) / 1000 + "s")
+				startTime = +(new Date())
+				Predict(JSON.stringify(data))
+				.then(res => {
+					console.log("请求运行时间: " + (new Date() - startTime) / 1000 + "s")
+					let a = document.createElement("a")
+					a.download = "data.json"
+					let blob = new Blob([JSON.stringify(res.data,"","\t")])
+					a.href = URL.createObjectURL(blob)
+					document.body.appendChild(a)
+					a.click()
+					document.body.removeChild(a)
+				})
+			}
 		}
 	},
 	created() {

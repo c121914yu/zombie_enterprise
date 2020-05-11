@@ -9,46 +9,50 @@ export default new Vuex.Store({
 			{
 				text:"行业",
 				model:"bussiness",
-				list: [
-					{label: "商业服务业",value: 0},
-					{label: "交通运输业",value: 1},
-					{label: "工业",value: 2},
-					{label: "社区服务",value: 3},
-					{label: "服务业",value: 4},
-					{label: "零售业",value: 5}
-				]
+				list: ["商业服务业","交通运输业","工业","社区服务","服务业","零售业"]
+				// list: [
+				// 	{label: "商业服务业",value: 0},
+				// 	{label: "交通运输业",value: 1},
+				// 	{label: "工业",value: 2},
+				// 	{label: "社区服务",value: 3},
+				// 	{label: "服务业",value: 4},
+				// 	{label: "零售业",value: 5}
+				// ]
 			},
 			{
 				text:"区域",
 				model:"area",
-				list: [
-					{label: "广西",value: 0},
-					{label: "江西",value: 1},
-					{label: "福建",value: 2},
-					{label: "湖北",value: 3},
-					{label: "山东",value: 4},
-					{label: "广东",value: 5},
-					{label: "湖南",value: 6}
-				]
+				list: ["广西","江西","福建","湖北","山东","广东","湖南"]
+				// list: [
+				// 	{label: "广西",value: 0},
+				// 	{label: "江西",value: 1},
+				// 	{label: "福建",value: 2},
+				// 	{label: "湖北",value: 3},
+				// 	{label: "山东",value: 4},
+				// 	{label: "广东",value: 5},
+				// 	{label: "湖南",value: 6}
+				// ]
 			},
 			{
 				text:"企业类型",
 				model:"company_type",
-				list: [
-					{label: "农民专业合作社",value: 0},
-					{label: "有限责任公司",value: 1},
-					{label: "股份有限公司",value: 2},
-					{label: "集体所有制企业",value: 3},
-					{label: "合伙企业",value: 4}
-				]
+				list: ["农民专业合作社","有限责任公司","股份有限公司","集体所有制企业","合伙企业"]
+				// list: [
+				// 	{label: "农民专业合作社",value: 0},
+				// 	{label: "有限责任公司",value: 1},
+				// 	{label: "股份有限公司",value: 2},
+				// 	{label: "集体所有制企业",value: 3},
+				// 	{label: "合伙企业",value: 4}
+				// ]
 			},
 			{
 				text:"控制人类型",
 				model:"controller_type",
-				list: [
-					{label: "自然人",value: 0},
-					{label: "企业法人",value: 1},
-				]
+				list: ["自然人","企业法人"]
+				// list: [
+				// 	{label: "自然人",value: 0},
+				// 	{label: "企业法人",value: 1},
+				// ]
 			},
 		],
 		inputs: [
@@ -59,7 +63,7 @@ export default new Vuex.Store({
 			{text:"专利",step:1,model:"patent_num"},
 			{text:"商标",step:1,model:"brand_num"},
 			{text:"著作权",step:1,model:"copyright_num"},
-			{text:"第几年的企业信息",step:1,model:"year"},
+			{text:"year",step:1,model:"year"},
 			{text:"债权融资额度",step:0.01,model:"debet_quota"},
 			{text:"债权融资成本",step:0.01,model:"debet_cost"},
 			{text:"股权融资额度",step:0.01,model:"equity_quota"},

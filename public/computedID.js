@@ -35,12 +35,23 @@ onmessage = function(e) {
 						resultID.push(id)
 				}
 			
-			if(loadIndex === files.length)
+			if(loadIndex === files.length){
+				// 对fileData进行排序
+				sortFile()
 				postMessage({
 					fileData,
 					resultID
 				})	
+			}
 		}
 	})
+	
+	function sortFile(){
+		fileData.forEach(item => {
+			item.data.sort((a,b) => {
+				return a[0] - b[0]
+			})
+		})
+	}
 }
 

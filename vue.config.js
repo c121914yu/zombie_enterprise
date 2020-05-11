@@ -15,7 +15,7 @@ module.exports = {
 		hotOnly: false,
 		proxy: {
 			'/api': {
-				target: "http://app.rmsdmedia.com",
+				target: "http://10.12.42.43/",
 				ws: true,
 				changeOrigin: true,
 				secure: false,

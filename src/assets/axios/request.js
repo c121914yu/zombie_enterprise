@@ -7,7 +7,6 @@ var load
 const service = axios.create({
 	// baseURL : process.env.VUE_APP_BASEURL,
 	baseURL: "",
-	timeout : 10000
 })
 
 // 请求拦截
@@ -23,6 +22,7 @@ const error = (err) => {
 	if(err.response){
 		
 	}
+	console.log(err)
 	load.hide()
 	return Promise.reject(err)
 }

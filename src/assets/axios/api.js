@@ -5,9 +5,8 @@ import {
 
 const getFile = (params) => getAction("",params)
 
-const login = (data) => postAction("api/login",data)
-
+const Predict = (data) => postAction("http://10.12.42.43/predict/",data)
 
 export {
-	getFile
+	Predict
 }

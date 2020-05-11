@@ -6,7 +6,7 @@
 		@mouseleave="show=false"
 	>
 		<p class="select-text" :class="value === '' ? 'placeholder' : ''">
-			{{value === '' ? placeholder : list[value].label}}
+			{{value === '' ? placeholder : value}}
 		</p>
 		<i 
 			class="iconfont icon-xiala xiala"
@@ -19,12 +19,12 @@
 		>
 			<div 
 				class="item"
-				:class="value === index ? 'active' : ''"
+				:class="item === value ? 'active' : ''"
 				v-for="(item,index) in list"
 				:key="index"
 				@click="check(item)"
 			>
-				{{item.label}}
+				{{item}}
 			</div>
 		</div>
 	</div>
@@ -46,7 +46,7 @@ export default{
 	},
 	methods:{
 		check(item){
-			this.$emit("change",item.value)
+			this.$emit("change",item)
 			this.$emit("update")
 			this.show = false
 		}
