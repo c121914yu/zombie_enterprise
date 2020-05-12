@@ -3,7 +3,7 @@ import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 
 import Home from "../views/Home.vue"
-import Single from "../views/SingleRec.vue"
+import infoRec from "../views/infoRec.vue"
 import Batch from "../views/BatchRec.vue"
 import ID from "../views/IDRec.vue"
 
@@ -14,9 +14,9 @@ const routes = [
 		component: Home
 	},
 	{
-		path: '/SingleRec',
-		name: 'single',
-		component: Single
+		path: '/infoRec',
+		name: 'infoRec',
+		component: infoRec
 	},
 	{
 		path: '/BatchRec',

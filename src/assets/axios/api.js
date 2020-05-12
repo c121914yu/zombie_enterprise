@@ -5,7 +5,7 @@ import {
 
 const getFile = (params) => getAction("",params)
 
-const Predict = (data) => postAction("http://10.12.42.43/predict/",data)
+const Predict = (data) => postAction("/predict/",data)
 
 export {
 	Predict

@@ -23,9 +23,9 @@ export default{
 		return{
 			navs: [
 				{text:"主页",name:'home',active:false},
-				{text:"单个识别",name:'single',active:false},
-				{text:"批量识别",name:'batch',active:false},
-				{text:"ID识别",name:'id',active:false}
+				{text:"僵尸识别",name:'infoRec',active:false},
+				// {text:"批量识别",name:'batch',active:false},
+				{text:"企业查询",name:'id',active:false}
 			]
 		}
 	},
@@ -155,7 +155,7 @@ export default{
 	}
 }
 
-@media (max-width:500px){
+/* @media (max-width:500px){
 	.nav h3{
 		display: none;
 	}
@@ -166,5 +166,5 @@ export default{
 	.nav .list .item{
 		margin: 0;
 	}
-}
+} */
 </style>

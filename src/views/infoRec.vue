@@ -45,6 +45,7 @@
 				<div class="id" v-if="Data[currentIndex]">
 					<span>ID:</span>
 					<input 
+						v-if="!search"
 						type="number"
 						placeholder="当前企业编号ID"
 						min=0
@@ -52,6 +53,29 @@
 						@input="inputID"
 						:value="Data[currentIndex][0].ID"
 					>
+					<input
+						v-if="search"
+						type="number"
+						placeholder="ID查询企业"
+						min=0
+						step="1"
+						v-model="searchText"
+					/>
+					<i 
+						class="iconfont search"
+						:class="search ? 'icon-error' : 'icon-search'"
+						@click="search=!search">
+					</i>
+					<div v-if="search" class="search-list">
+						<div 
+							class="item"
+							v-for="id in searchID"
+							:key="id"
+							@click="searchRes(id)"
+						>
+							{{id}}
+						</div>
+					</div>
 				</div>
 				
 				<div class="page" v-show="resultID.length > 0">
@@ -68,7 +92,8 @@
 							@input="inputIndex"
 							@focusout="outInputIndex"
 						>
-						/ {{resultID.length}}</p>
+						/ {{resultID.length}}
+					</p>
 					<i 
 						class="iconfont icon-next"
 						@click="changeIndex(1)"
@@ -158,6 +183,7 @@ export default{
 	data(){
 		return{
 			currentIndex: 0,
+			search: false,
 			searchText: "",
 			currentYear: 0,
 			isOperate: false,
@@ -175,12 +201,24 @@ export default{
 		}
 	},
 	methods:{
+		update(){ //解决层级嵌套不更新问题
+			const temp = this.currentYear
+			this.currentYear = ""
+			this.currentYear = temp
+			this.inputIndex()
+		},
 		inputID(e){
 			const val = e.target.value
 			this.Data[this.currentIndex].forEach(item => {
 				item.ID = +val
 			})
 			this.update()
+		},
+		searchRes(id){
+			if(id != "无数据")
+				this.getCurrentData(this.resultID.indexOf(id))
+			this.search = false
+			this.searchText=''
 		},
 		changeIndex(index){
 			if(this.resultID.length === 0) return
@@ -222,12 +260,6 @@ export default{
 			this.resultID.splice(this.currentIndex,1)
 			this.Data.splice(this.currentIndex,1)
 			this.changeIndex(-1)
-		},
-		update(){ //解决层级嵌套不更新问题
-			const temp = this.currentYear
-			this.currentYear = ""
-			this.currentYear = temp
-			this.inputIndex()
 		},
 		checkFile(e){ //选择文件
 			let load = this.$loading()
@@ -344,6 +376,19 @@ export default{
 			}
 		}
 	},
+	computed:{
+		searchID(){
+			let list = this.resultID.filter(item => {
+				const reg = new RegExp(`${this.searchText}`,'i')
+				return reg.test(item)
+			})
+			if(this.searchText === "")
+				list = [...this.resultID]
+			if(list.length === 0)
+				list.push("无数据")
+			return list
+		}
+	},
 	created() {
 		this.selects = [...this.$store.state.selects]
 		this.inputs = [...this.$store.state.inputs]
@@ -416,9 +461,38 @@ export default{
 	color: var(--dark-common);
 }
 .single .container .slide .id input{
-	width: 150px;
+	width: 170px;
+	height: 35px;
 	padding-left: 30px;
 }
+.single .container .slide .id .search{
+	position: absolute;
+	right: 5px;
+	color: var(--dark-common);
+	cursor: pointer;
+}
+.single .container .slide .id .search-list{
+	z-index: 10;
+	position: absolute;
+	top: 35px;
+	width: 100%;
+	max-height: 165px;
+	background-color: #FFFFFF;
+	box-shadow: var(--box-shadow2);
+	border-radius: 5px;
+	color: var(--dark-common);
+	text-align: center;
+	overflow-y: scroll;
+}
+.single .container .slide .id .search-list .item{
+	padding: 5px 0;
+	cursor: pointer;
+}
+.single .container .slide .id .search-list .item:hover{
+	background-color: var(--green1);
+	color: #FFFFFF;
+}
+
 .single .container .slide .page{
 	position: absolute;
 	top: 10px;

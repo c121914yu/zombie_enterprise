@@ -5,8 +5,7 @@ var load
 
 // 创建实例
 const service = axios.create({
-	// baseURL : process.env.VUE_APP_BASEURL,
-	baseURL: "",
+	baseURL: "http://10.12.42.43",
 })
 
 // 请求拦截

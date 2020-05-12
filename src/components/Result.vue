@@ -13,6 +13,18 @@
 					正常企业: <span>{{normal_amount.length}}个</span>
 				</p>
 			</header>
+			<div class="navs">
+				<div 
+					class="item"
+					:class="index === currentNav ? 'active' : ''"
+					v-for="(item,index) in navs"
+					:key="item"
+					@click="currentNav=index"
+				>
+					{{item}}
+				</div>
+				
+			</div>
 			<div class="charts">
 				<div class="chart" id="sum"></div>
 				<div class="chart" id="degree"></div>
@@ -24,13 +36,18 @@
 
 <script>
 import data from "../assets/data.json"
+var charts = []
 var zombieDis = []
 export default{
 	data(){
 		return{
+			navs: [
+				"分布情况","单个企业"
+			],
+			currentNav: 0,
+			time: 0,
 			zombie_amount: [],
 			normal_amount: [],
-			time: 0
 		}
 	},
 	methods:{
@@ -74,14 +91,14 @@ export default{
 								name: "僵尸企业",
 								value: this.zombie_amount.length,
 								itemStyle: {
-									color: "#F56C6C"
+									color: "#930000"
 								}
 							},
 							{
 								name: "正常企业",
 								value: this.normal_amount.length,
 								itemStyle: {
-									color: "#5ad8a6"
+									color: "#ff7575"
 								}
 							}
 						]
@@ -90,6 +107,7 @@ export default{
 			}
 			let myChart = this.$echarts.init(document.getElementById("sum"))//初始化
 			myChart.setOption(option)
+			charts.push(myChart)
 		},
 		count_zombieDis(){ //僵尸分布情况计算
 			for(let j=0;j<5;j++){
@@ -123,7 +141,7 @@ export default{
 					text: "僵尸分布",
 					left: "center"
 				},
-				color: ["#E6CAFF","#CA8EFF","#9F35FF","#6F00D2","#3A006F"],
+				color: ["#FFB5B5","#ff7575","#FF2D2D","#EA0000","#930000"],
 				tooltip: {
 				  trigger : "axis",
 				  axisPointer : {
@@ -163,6 +181,7 @@ export default{
 			}
 			let myChart = this.$echarts.init(document.getElementById("zombie-dis"))//初始化
 			myChart.setOption(option)
+			charts.push(myChart)
 		},
 		draw_degree(){ // 僵尸程度分布
 			let option = {
@@ -172,50 +191,50 @@ export default{
 				},
 				xAxis: {
 					type: "category",
-					// show: false
+					data: ["企业"],
+					show: false
 				},
 				yAxis: {
 					type: "value",
-					// show: false
+					name: "僵尸程度"
 				},
 				series: [
 					{
 						name: "僵尸程度",
 						type: "bar",
-						barWidth: 50,
+						barWidth: "10%",
 						barGap : "-100%",
 						itemStyle: {
 							color: new this.$echarts.graphic.LinearGradient(
 								0, 0, 0, 1,
 								[
-										{offset: 0, color: '#3A006F'},
-										{offset: 0.4, color: '#6F00D2'},
-										{offset: 0.6, color: '#9F35FF'},
-										{offset: 0.8, color: '#CA8EFF'},
-										{offset: 1, color: '#E6CAFF'},
+										{offset: 0, color: '#930000'},
+										{offset: 0.4, color: '#EA0000'},
+										{offset: 0.6, color: '#FF2D2D'},
+										{offset: 0.8, color: '#ff7575'},
+										{offset: 1, color: '#FFB5B5'},
 								]
 							)
 						},
-						data: [100]
-					},
-					{
-						type: "bar",
-						itemStyle: {
-							// color: 'rgba(0,0,0,0.5)'
-						},
-						barWidth: 50,
-						barGap : "-100%",
 						markLine: {
+							silent: true,
+							lineStyle: {
+								type: "solid",
+								width: 3
+							},
 							data: [
 								[
 									{
-										// 固定起点的 x 像素位置，用于模拟一条指向最大值的水平线
-										yAxis: 'max',
 										x: '10%',
+										y: "50%",
 										symbol:'none'
 									}, 
 									{
-										type: 'max',
+										x: "46%",
+										y: "50%",
+										value: 50,
+										symbolSize: 12,
+										symbolOffset: [0,"20%"],
 										label: {
 											position: "middle"
 										}
@@ -223,12 +242,13 @@ export default{
 								]
 							]
 						},
-						data: [50]
+						data: [100]
 					}
 				]
 			}
 			let myChart = this.$echarts.init(document.getElementById("degree"))//初始化
 			myChart.setOption(option)
+			charts.push(myChart)
 		}
 	},
 	mounted() {
@@ -238,6 +258,14 @@ export default{
 		this.count_zombieDis()
 		this.draw_zombie_dis()
 		this.draw_degree()
+		
+		window.onresize = () => {
+			setTimeout(() => {
+				charts.forEach(chart => {
+					chart.resize()
+				})
+			})
+		}
 	},
 }
 </script>
@@ -260,6 +288,21 @@ export default{
 }
 .result .content header p span{
 	font-weight: 600;
+}
+
+.result .content .navs{
+	margin: 10px 0;
+	display: flex;
+}
+.result .content .navs .item{
+	margin-right: 15px;
+	padding: 5px 10px;
+	cursor: pointer;
+}
+.result .content .navs .item.active{
+	background-color: var(--origin);
+	color: #FFFFFF;
+	border-radius: 5px;
 }
 
 .result .content .charts{
