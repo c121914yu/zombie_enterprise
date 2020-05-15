@@ -1,14 +1,13 @@
 <template>
 	<div class="single">
 		<section>
-			<p>单个企业识别需要提供企业三年的数据信息,可以通过手动填写,也可以通过csv文件导入。导入数据将自动填写至输入框,可根据需要进行修改或填补。</p>
+			<p>僵尸企业识别需要提供企业三年的数据信息,可以通过手动填写,也可以通过csv文件导入。导入数据将自动填写至输入框,可根据需要进行修改或填补。</p>
 			<a href="http://load.jinlongyuchitang.cn/temp.csv?attname=" target="_blank">
 				csv文件模板
 			</a> 导入数据注意事项:
 			<ul>
 				<li>首行标题文本请勿删除</li>
-				<li>最多填写3年数据(即包括标题最多4行)</li>
-				<li>可缺列,缺失部分默认留空</li>
+				<li>可根据需求划分为多个文件,但必须保证第一列为企业的唯一ID</li>
 				<li>保存为csv UTF-8(逗号分隔)格式</li>
 			</ul>
 		</section>

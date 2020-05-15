@@ -5,7 +5,7 @@ var load
 
 // 创建实例
 const service = axios.create({
-	baseURL: "http://10.12.42.43",
+	baseURL: "http://10.12.41.32:8080/",
 })
 
 // 请求拦截

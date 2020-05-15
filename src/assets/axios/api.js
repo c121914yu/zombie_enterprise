@@ -5,7 +5,7 @@ import {
 
 const getFile = (params) => getAction("",params)
 
-const Predict = (data) => postAction("/predict/",data)
+const Predict = (data) => postAction("predict/",data)
 
 export {
 	Predict
