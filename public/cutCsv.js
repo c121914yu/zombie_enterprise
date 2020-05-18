@@ -11,24 +11,9 @@ onmessage = function(e) {
 	
 	// 遍历resultID，对应下标的Data若不为数组则查询对应的fileData
 	for(let i=0;i<resultID.length;i++){
-		if(i >= 3000) break
+		if(i >= 10 && i<= resultID.length-5) continue
 		if(!Data[i]){
 			Data[i] = getData(resultID[i])
-			// let worker = new Worker("./getEnterpriseData.js")
-			// let ID = resultID[i]
-			// let enterprise = [
-			// 	{...param,ID},
-			// 	{...param,ID},
-			// 	{...param,ID}
-			// ]
-			// worker.postMessage({
-			// 	enterprise,
-			// 	tempArr,
-			// 	fileData,
-			// })
-			// worker.onmessage = (e) => {
-			// 	Data[i] = e.data.enterprise
-			// }
 			toStr(Data[i])
 		}
 	}

@@ -2,9 +2,8 @@
   <div id="app">
 		<Nav></Nav>
 		<div class="view">
-			<Head></Head>
 			<keep-alive>
-				<router-view class="container"/>
+				<router-view class="body"/>
 			</keep-alive>
 		</div>
   </div>
@@ -12,11 +11,9 @@
 
 <script>
 import Nav from "./components/Nav.vue"
-import Head from "./components/Head.vue"
 export default{
 	components:{
-		Nav,
-		Head
+		Nav
 	}
 }
 </script>
@@ -27,34 +24,24 @@ export default{
 #app{
 	width: 100%;
 	min-height: 100vh;
-	background-color: #f9f9f9;
 	position: relative;
+	overflow-x: hidden;
 }
 
 .view{
-	width: calc(100%-200px);
-	margin-left: 200px;
-	height: 100%;
-	padding: 20px 0;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
+	width: 100%;
+	min-height: 100vh;
+	background-color: rgba(120,210,236,0.1);
+	padding-left: 170px;
 }
-.view .container{
-	width: 80%;
+.view .body{
+	width: 100%;
 	height: 100%;
-}
-@media (max-width:1100px){
-	.view .container{
-		width: 90%;
-	}
+	padding: 0 10px 10px;
 }
 @media (max-width:800px) {
 	.view{
-		width: 100%;
 		margin-top: 60px;
-		margin-left: 0;
 	}
 }
 </style>

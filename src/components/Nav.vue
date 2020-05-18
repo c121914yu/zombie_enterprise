@@ -1,6 +1,6 @@
 <template>
 	<div class="nav" >
-		<img src="http://blogs.jinlongyuchitang.cn/background.jpg" class="logo">
+		<i class="logo iconfont icon-jiangshi"></i>
 		<h3>僵尸企业画像</h3>
 		<div class="list">
 			<router-link 
@@ -10,6 +10,7 @@
 				:key="index"
 				:to="{name:item.name}"
 			>
+				<i class="iconfont" :class="item.icon"></i>
 				{{item.text}}
 			</router-link>
 		</div>
@@ -22,10 +23,9 @@ export default{
 	data(){
 		return{
 			navs: [
-				{text:"主页",name:'home',active:false},
-				{text:"僵尸识别",name:'infoRec',active:false},
-				// {text:"批量识别",name:'batch',active:false},
-				{text:"企业查询",name:'id',active:false}
+				{text:"主页",name:'home',icon:"icon-home",active:false},
+				{text:"僵尸识别",name:'infoRec',icon:"icon-shibie",active:false},
+				{text:"企业查询",name:'id',icon:"icon-search",active:false}
 			]
 		}
 	},
@@ -66,13 +66,15 @@ export default{
 	left: 0;
 	z-index: 10;
 	height: 100vh;
-	width: 200px;
-	padding: 50px 10px;
+	width: 170px;
+	padding-top: 20px;
+	background-color: #FFFFFF;
+	border-top-right-radius: 5px;
+	border-bottom-right-radius: 5px;
+	box-shadow: var(--box-shadow2);
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	background-color: rgba(91,143,249,0.05);
-	box-shadow: 5px 0 5px rgba(91,143,249,0.2);
 	opacity: 1;
 }
 .nav.lucency{
@@ -83,8 +85,7 @@ export default{
 }
 
 .nav .logo{
-	width: 100px;
-	height: 100px;
+	font-size: 4em;
 	border-radius: 50%;
 }
 
@@ -94,25 +95,33 @@ export default{
 }
 
 .nav .list{
+	width: 100%;
 	margin-top: 10px;
+	padding-left: 1px;
 	font-size: 1.1em;
-	text-align: center;
+	position: relative;
 }
 .nav .list .item{
 	margin-bottom: 25px;
+	width: 100%;
 	padding: 0 10px;
-	border-radius: 5px;
-	color: #f9f9f9;
-	background-color: var(--green1);
+	color: var(--dark-remark);
+	border-left: 4px solid transparent;
+	border-radius: 2px;
 	display: block;
 	cursor: pointer;
 	transition: var(--hover-speed);
 }
-.nav .list .item:hover,
-.nav .list .item.active
-{
-	background-color: var(--blue2);
-	transform: scale(1.2);
+.nav .list .item i{
+	margin: 0 10px;
+	transform: scale(1.1);
+}
+.nav .list .item:hover{
+	color: var(--origin);
+}
+.nav .list .item.active{
+	border-left: 4px solid var(--origin);
+	color: var(--origin);
 }
 
 @media (max-width:800px) {
@@ -154,17 +163,4 @@ export default{
 		transform: scale(1.1);
 	}
 }
-
-/* @media (max-width:500px){
-	.nav h3{
-		display: none;
-	}
-	.nav .list{
-		width: 100%;
-		justify-content: space-around;
-	}
-	.nav .list .item{
-		margin: 0;
-	}
-} */
 </style>

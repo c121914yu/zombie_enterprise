@@ -37,11 +37,14 @@ export default{
 	line-height: 1.1em;
 	border-radius: 50%;
 	background-color: #FFFFFF;
+	color: #FFFFFF;
+	border: var(--border1);
 	font-size: 0.9em;
 	cursor: pointer;
 	position: relative;
 }
 .check .dot.active{
-	background-color: var(--blue2);
+	border-color: transparent;
+	background-color: var(--origin);
 }
 </style>

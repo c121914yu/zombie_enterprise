@@ -3,7 +3,7 @@
 		<div class="container">
 			<h3>{{head}}</h3>
 			<p class="content">{{text}}</p>
-			<div class="btn">
+			<div class="btns">
 				<p 
 					:style="'color:' + confirmColor"
 					@click="confirm"
@@ -79,7 +79,7 @@ export default{
 	margin-top: 5px;
 	width: 100%;
 }
-.model .btn{
+.model .btns{
 	position: absolute;
 	bottom: 0;
 	width: 100%;
@@ -90,11 +90,11 @@ export default{
 	font-size: 1.1em;
 	cursor: pointer;
 }
-.model .btn p{
+.model .btns p{
 	flex: 1;
 	padding: 5px 0;
 }
-.model .btn .cancel{
+.model .btns .cancel{
 	border-left: var(--border1);
 }
 </style>

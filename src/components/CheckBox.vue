@@ -68,8 +68,6 @@ export default{
 	display: flex;
 	align-items: center;
 	position: relative;
-}
-.check-box:hover{
 	z-index: 5;
 }
 .check-box p{
@@ -118,11 +116,11 @@ export default{
 }
 .check-box .models .item:hover{
 	color: #FFFFFF;
-	background-color: rgba(109,200,236,0.6);
+	background-color: rgba(255,152,69,0.7);
 }
 .check-box .models .item.active{
 	color: #FFFFFF;
-	background-color: var(--blue1);
+	background-color: rgba(255,152,69,1);
 }
 .check-box .models .item i{
 	position: absolute;

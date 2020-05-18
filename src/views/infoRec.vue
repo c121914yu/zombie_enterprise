@@ -1,18 +1,30 @@
 <template>
-	<div class="single">
-		<section>
-			<p>僵尸企业识别需要提供企业三年的数据信息,可以通过手动填写,也可以通过csv文件导入。导入数据将自动填写至输入框,可根据需要进行修改或填补。</p>
-			<a href="http://load.jinlongyuchitang.cn/temp.csv?attname=" target="_blank">
-				csv文件模板
-			</a> 导入数据注意事项:
-			<ul>
-				<li>首行标题文本请勿删除</li>
-				<li>可根据需求划分为多个文件,但必须保证第一列为企业的唯一ID</li>
-				<li>保存为csv UTF-8(逗号分隔)格式</li>
-			</ul>
-		</section>
+	<div class="info-res">
+		<header>
+			<section class="card">
+				僵尸企业识别需要提供企业三年的数据信息,可以通过手动填写,也可以通过csv文件导入。导入数据将自动填写至输入框,可根据需要进行修改或填补。识别结果包括僵尸分布,每个僵尸企业的僵尸分类和僵尸程度,以及各特征对僵尸程度的贡献度。
+			</section>
+			<div class="card" style="margin: 0 10px;">
+				<a href="http://load.jinlongyuchitang.cn/temp.csv?attname=" target="_blank">
+					csv文件模板
+				</a> 导入数据注意事项:
+				<ul>
+					<li>首行标题文本请勿删除</li>
+					<li>可根据需求划分为多个文件,但必须保证第一列为企业的唯一ID</li>
+					<li>保存为csv UTF-8(逗号分隔)格式</li>
+				</ul>
+			</div>
+			<div class="card model-des">
+				<p>3种模型的区别:</p>
+				<ul>
+					<li>CNN: 基于grad_cam的特征贡献矩阵,可获取:僵尸程度,企业画像文字描述,同类企业推荐,详细企业画像.</li>
+					<li>stacking: 基于shap和模型特征重要度的特征贡献矩阵,可获取:僵尸程度,企业画像文字描述,同类企业推荐,详细企业画像,特征贡献矩阵.</li>
+					<li>deeptree: 基于shap和模型特征重要度的特征贡献矩阵,可获取:僵尸程度,企业画像文字描述,同类企业推荐,详细企业画像.</li>
+				</ul>
+			</div>
+		</header>
 		
-		<div class="container">
+		<div class="container card">
 			<div class="slide">
 				<h3>企业信息</h3>
 				<label class="check-file btn">
@@ -106,7 +118,7 @@
 				<p class="remark">金额单位: 万元人民币</p>
 				<!-- 年份选择 -->
 				<div class="years">
-					<p title="复制第一年数据" class="copy" @click="copy">填充</p>
+					<p title="复制第一年数据" class="copy btn" @click="copy">拷贝</p>
 					<div 
 						class="year"
 						:class="currentYear === index ? 'active' : ''"
@@ -118,12 +130,11 @@
 					</div>
 				</div>
 				<!-- 主体输入 -->
-				<div class="content selects">
-					<div 
+				<div class="content">
+					<div
 						class="item"
 						v-for="(item,index) in selects"
-						:key="index"
-					>
+						:key="item.text">
 						<p>{{item.text}}</p>
 						<Select 
 							:list="item.list"
@@ -132,14 +143,11 @@
 							@update="update()">
 						</Select>
 					</div>
-				</div>
-				<div class="content">
 					<div 
 						 v-if="index!=0"
 						class="item"
 						v-for="(item,index) in inputs"
-						:key="index"
-					>
+						:key="item.text">
 						<p>{{item.text === "year" ? "第几年企业信息" : item.text}}</p>
 						<div class="input">
 							<input
@@ -168,7 +176,7 @@
 			</div>
 		</div>
 		
-		<result></result>
+		<result v-if="resultData" :result="resultData"></result>
 	</div>
 </template>
 
@@ -178,6 +186,7 @@ import check from "../components/Check.vue"
 import Select from "../components/Select.vue"
 import result from "../components/Result.vue"
 import {Predict} from "../assets/axios/api.js"
+import testData from "../assets/data.json"
 export default{
 	data(){
 		return{
@@ -185,18 +194,19 @@ export default{
 			search: false,
 			searchText: "",
 			currentYear: 0,
-			isOperate: false,
+			isOperate: false, //手动填写
 			is_impute: true,
 			selects: [],
 			inputs: [],
 			models: [
 				{name: "CNN模型",active: true,param: "use_model_CNN"},
-				{name: "stacking模型",active: false,param: "use_model_stacking"},
-				{name: "deeptree模型",active: false,param: "use_model_deeptree"}
+				{name: "stacking模型",active: true,param: "use_model_stacking"},
+				{name: "deeptree模型",active: true,param: "use_model_deeptree"}
 			],
 			Data: [],
 			resultID: [],
-			fileData: []
+			fileData: [],
+			resultData: null
 		}
 	},
 	methods:{
@@ -335,6 +345,7 @@ export default{
 			})
 		},
 		submit(e){
+			if(this.Data.length === 0) return
 			e.preventDefault()
 			let startTime = +(new Date())
 			let load = this.$loading()
@@ -359,7 +370,7 @@ export default{
 					merged: e.data
 				}
 				load.hide()
-				console.log("字符串转化时间: " + (new Date() - startTime) / 1000 + "s")
+				console.log("字符串切割时间: " + (new Date() - startTime) / 1000 + "s")
 				startTime = +(new Date())
 				Predict(JSON.stringify(data))
 				.then(res => {
@@ -373,6 +384,61 @@ export default{
 					document.body.removeChild(a)
 				})
 			}
+		},
+		cutData(data){
+			data = testData
+			const modelType = {}
+			this.models.forEach(item => {
+				modelType[item.param] = item.active 
+			})
+			let result = {
+				time: (data.time/1000).toFixed(1),
+				data: [],
+				...modelType
+			}
+			for(let i in data.predict){
+				let predict = data.predict[i]
+				let zombie_type = data.zombie_type[i] //僵尸类型
+				let zombie_type_featrues = data.zombie_type_featrues[i] //特征
+				delete zombie_type_featrues.ID
+				delete zombie_type.ID
+				// 不同模型不同的返回值
+				let grad_cam={},zombie_level={},contribute_matrix={}
+				if(result.use_model_CNN){
+					grad_cam = data.grad_cam[i] //81个特征
+					delete grad_cam.ID
+				}
+				if(result.use_model_stacking){
+					zombie_level = data.zombie_level[i] //僵尸程度
+					contribute_matrix = data.contribute_matrix[i] //贡献度
+					delete contribute_matrix.ID
+				}
+				
+				let item = {
+					id: predict.company_id,
+					final_pre: predict.final_pre,
+					zombie_type: [],
+					zombie_level: zombie_level.僵尸性程度,
+					grad_cam: [],
+					zombie_type_featrues: zombie_type_featrues,
+					contribute_matrix
+				}
+				// 获取僵尸类型
+				for(let index in zombie_type)
+					if(zombie_type[index] != 0)
+						switch(index){
+							case "I": item.zombie_type.push(1);break;
+							case "II": item.zombie_type.push(2);break;
+							case "III": item.zombie_type.push(3);break;
+							case "IV": item.zombie_type.push(4);break;
+							case "V": item.zombie_type.push(5);break;
+						}
+				// 提取81个特征值
+				for(let key in grad_cam)
+					item.grad_cam.push(grad_cam[key])
+				result.data.push(item)
+			}
+			this.resultData = result
 		}
 	},
 	computed:{
@@ -391,6 +457,7 @@ export default{
 	created() {
 		this.selects = [...this.$store.state.selects]
 		this.inputs = [...this.$store.state.inputs]
+		this.cutData()
 	},
 	components:{
 		checkBox,
@@ -402,75 +469,72 @@ export default{
 </script>
 
 <style scoped>
-.single section{
-	margin: 15px 0;
+.info-res{
+	min-height: 101vh;
 }
-.single section a{
-	color: var(--green2);
+.info-res header{
+	display: grid;
+	grid-template-columns: repeat(4,1fr);
+}
+.info-res header>div a{
+	color: var(--origin);
 	text-decoration: underline;
 }
-.single section ul{
+.info-res header>div ul{
 	list-style: Disc;
 	padding-left: 20px;
+	white-space: pre-wrap;
+}
+.info-res header>div ul li{
+	white-space: pre-wrap;
+}
+.info-res header .model-des{
+	grid-column-start: 3;
+	grid-column-end: 5;
 }
 
-.single .container{
+.info-res .container{
+	margin: 10px 0;
 	width: 100%;
-	background-color: var(--green1);
-	box-shadow: var(--box-shadow1);
-	color: #FFFFFF;
-	border-radius: 10px;
 	position: relative;
 	user-select: none;
 }
 
-.single .container .slide{
-	padding: 10px;
+.info-res .container .slide{
 	display: flex;
-	flex-wrap: wrap;
 	align-items: center;
 	position: relative;
 }
-.single .container .slide .btn{
+.info-res .container .slide .btn{
 	margin-left: 15px;
-	background-color: #FFFFFF;
-	color: var(--dark-common);
+	border: var(--border1);
 	padding: 5px 10px;
 	border-radius: 4px;
 	cursor: pointer;
 }
-.single .container .slide .btn.active,
-.single .container .slide .btn:hover
-{
-	color: #FFFFFF;
-	background-color: var(--origin);
-}
-.single .container .slide .btn:active{
-	transform: scale(0.95);
-}
-.single .container .slide .id{
+.info-res .container .slide .id{
 	margin-left: 15px;
 	display: flex;
 	align-items: center;
 	position: relative;
 }
-.single .container .slide .id span{
+.info-res .container .slide .id span{
 	position: absolute;
 	left: 5px;
 	color: var(--dark-common);
 }
-.single .container .slide .id input{
+.info-res .container .slide .id input{
 	width: 170px;
 	height: 35px;
 	padding-left: 30px;
 }
-.single .container .slide .id .search{
+.info-res .container .slide .id .search{
 	position: absolute;
 	right: 5px;
 	color: var(--dark-common);
 	cursor: pointer;
 }
-.single .container .slide .id .search-list{
+.info-res .container .slide .id .search-list{
 	z-index: 10;
 	position: absolute;
 	top: 35px;
@@ -483,60 +547,59 @@ export default{
 	text-align: center;
 	overflow-y: scroll;
 }
-.single .container .slide .id .search-list .item{
+.info-res .container .slide .id .search-list .item{
 	padding: 5px 0;
 	cursor: pointer;
 }
-.single .container .slide .id .search-list .item:hover{
-	background-color: var(--green1);
+.info-res .container .slide .id .search-list .item:hover{
+	background-color: var(--origin);
 	color: #FFFFFF;
 }
 
-.single .container .slide .page{
+.info-res .container .slide .page{
 	position: absolute;
-	top: 10px;
-	right: 15px;
+	top: 0;
+	right: 0;
 	display: flex;
 	align-items: center;
 }
-.single .container .slide .page i{
+.info-res .container .slide .page i{
 	margin: 0 5px;
 	font-size: 1.2em;
 	font-weight: 600;
 	cursor: pointer;
 }
-.single .container .slide .page .current-index{
+.info-res .container .slide .page .current-index{
 	width: 14px;
-	color: #FFFFFF;
 	padding: 0;
 	background-color: transparent;
 	border: 0;
 	text-align: right;
 }
 
-.single form{
+.info-res form{
+	margin-top: 5px;
 	position: relative;
-	padding: 0 10px;
-	overflow: hidden;
+	overflow-y: hidden;
 	transition: height var(--hover-speed);
 }
-.single form .remark{
+.info-res form .remark{
 	font-size: 0.9em;
-	color: #f0f0f0;
+	color: var(--dark-remark);
 }
 
-.single form .years{
+.info-res form .years{
 	position: absolute;
 	top: 0;
-	right:20px;
+	right:0;
 	display: flex;
 	align-items: center;
 }
-.single form .years .copy{
-	margin-right: 5px;
+.info-res form .years .copy{
+	padding: 0 5px;
 	cursor: pointer;
 }
-.single form .years .year{
+.info-res form .years .year{
 	margin: 0 5px;
 	padding: 0 10px;
 	border-radius: 5px;
@@ -544,137 +607,103 @@ export default{
 	font-weight: 500;
 	cursor: pointer;
 }
-.single form .years .year.active{
+.info-res form .years .year.active{
+	color: #FFFFFF;
 	background-color: var(--origin);
 }
 
-.single form .content{
+.info-res form .content{
 	margin-top: 15px;
+	white-space: nowrap;
 	display: grid;
-	grid-template-columns: repeat(3,1fr);
+	grid-template-columns: repeat(4,1fr);
 	grid-gap: 10px;
 }
-.single form .content.selects{
-	grid-template-columns: repeat(2,1fr);
-}
-.single form .content .item p{
-	color: #F9F9F9;
-	font-weight: 600;
+.info-res form .content .item p{
+	color: var(--dark-remark);
 	letter-spacing: 1px;
 	font-size: 1.1em;
 	user-select: none;
 }
-.single form .content .item .input,
-.single .container .slide .list .main{
+.info-res form .content .item .input,
+.info-res .container .slide .list .main{
 	margin-top: 2px;
 	position: relative;
 	height: 35px;
 	line-height: 35px;
 }
-.single form .content .item .input input{
+.info-res form .content .item .input input{
 	width: 100%;
 	height: 100%;
 }
-.single form .content .item .input input:focus,
-.single .container .slide .list .main input:focus{
-	border-color: var(--blue1);
-	box-shadow: 0 0 10px #3775f1;
+.info-res form .content .item .input input:focus,
+.info-res .container .slide .list .main input:focus{
+	border-color: var(--origin);
+	box-shadow: 0 0 5px rgba(255,152,69,0.7);
 }
-.single form .content .item .input i{
+.info-res form .content .item .input i{
 	position: absolute;
 	margin: 0;
 	right: 10px;
-	color: rgba(30,148,147,0.7);
+	color: var(--origin);
 	cursor: pointer;
 	visibility: hidden;
 }
-.single form .content .item .input:hover input + i,
-.single form .content .item .input input:focus + i
+.info-res form .content .item .input:hover input + i,
+.info-res form .content .item .input input:focus + i
 {
 	visibility: visible;
 }
 
-.single .container .btns{
-	padding: 15px 10px 10px 10px;
+.info-res .container .btns{
+	padding-top: 10px;
 	width: 100%;
 	position: relative;
 	display: flex;
 	flex-wrap: wrap;
 }
-.single .container .btns .checkBox{
+.info-res .container .btns .checkBox{
 	flex: 1;
 }
-.single .container .btns .check{
+.info-res .container .btns .check{
 	margin: 0 20px;
 }
-.single .container .btns button{
+.info-res .container .btns button{
 	width: 30%;
 	max-width: 250px;
-	background-color: var(--blue2);
+	background-color: var(--origin);
 	transition: 0.1s;
 }
-.single .container .btns button:hover{
-	background-color: #3775f1;
+.info-res .container .btns button:hover{
+	background-color: #f8882f;
 }
-.single .container .btns button:active{
-	transform: scale(1.1);
+.info-res .container .btns button:active{
+	transform: scale(0.9);
 }
 
-@media (max-width:1230px) {
-	.single .container .slide h3{
-		width: 100%;
-		text-align: center;
-	}
-	.single .container .slide{
-		justify-content: center;
-	}
-	.single .container .slide .btn{
-		margin-top: 5px;
-	}
-	.single .container .slide .id{
-		margin-top: 5px;
-	}
-}
 @media (max-width:1100px) {
-	.single .container .content{
-		grid-template-columns: repeat(2,1fr);
-	}
-	.single .container .btns{
-		justify-content: center;
-	}
-	.single .container .btns .checkBox{
-		margin-bottom: 10px;
-		flex: auto;
-		flex-shrink: 0;
-		width: 100%;
-	}
-	.single .container .btns .check,
-	.single .container .btns button{
-		margin: 0;
-		flex-shrink: 0;
-		width: 50%;
-		display: flex;
-		justify-content: center;
+	.info-res form .content{
+		grid-template-columns: repeat(3,1fr);
 	}
 }
 @media (max-width:900px) {
-	.single .container .slide .btn{
+	.info-res .container .slide .btn{
 		margin-left: 5px;
 	}
-	.single .container .slide .id{
+	.info-res .container .slide .id{
 		margin-left: 5px;
 	}
 }
 @media (max-width:600px){
-	.single .container .slide .btn{
+	.info-res .container .slide .btn{
 		margin-left: 5px;
 	}
-	.single form .years{
+	.info-res form .years{
 		position: relative;
 		left: 50%;
 		transform: translateX(-50%);
 	}
-	.single form .content{
+	.info-res form .content{
 		grid-template-columns: 1fr;
 	}
 }

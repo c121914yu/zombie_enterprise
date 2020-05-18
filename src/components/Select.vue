@@ -100,10 +100,10 @@ export default{
 }
 .select .content .item:hover{
 	color: #FFFFFF;
-	background-color: rgba(109,200,236,0.6);
+	background-color: rgba(255,152,69,0.7);
 }
 .select .content .item.active{
 	color: #FFFFFF;
-	background-color: var(--blue1);
+	background-color: var(--origin);
 }
 </style>
