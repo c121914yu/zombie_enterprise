@@ -345,6 +345,7 @@ export default{
 			})
 		},
 		submit(e){
+			this.resultData = ""
 			if(this.Data.length === 0) return
 			e.preventDefault()
 			let startTime = +(new Date())
@@ -369,24 +370,24 @@ export default{
 					...modelType,
 					merged: e.data
 				}
+				this.cutData(testData)
 				load.hide()
 				console.log("字符串切割时间: " + (new Date() - startTime) / 1000 + "s")
 				startTime = +(new Date())
-				Predict(JSON.stringify(data))
-				.then(res => {
-					console.log("请求运行时间: " + (new Date() - startTime) / 1000 + "s")
-					let a = document.createElement("a")
-					a.download = "data.json"
-					let blob = new Blob([JSON.stringify(res.data,"","\t")])
-					a.href = URL.createObjectURL(blob)
-					document.body.appendChild(a)
-					a.click()
-					document.body.removeChild(a)
-				})
+				// Predict(JSON.stringify(data))
+				// .then(res => {
+				// 	console.log("请求运行时间: " + (new Date() - startTime) / 1000 + "s")
+				// 	let a = document.createElement("a")
+				// 	a.download = "data.json"
+				// 	let blob = new Blob([JSON.stringify(res.data,"","\t")])
+				// 	a.href = URL.createObjectURL(blob)
+				// 	document.body.appendChild(a)
+				// 	a.click()
+				// 	document.body.removeChild(a)
+				// })
 			}
 		},
 		cutData(data){
-			data = testData
 			const modelType = {}
 			this.models.forEach(item => {
 				modelType[item.param] = item.active 
@@ -399,7 +400,7 @@ export default{
 			for(let i in data.predict){
 				let predict = data.predict[i]
 				let zombie_type = data.zombie_type[i] //僵尸类型
-				let zombie_type_featrues = data.zombie_type_featrues[i] //特征
+				let zombie_type_featrues = data.zombie_type_featrues[i] //僵尸特征
 				delete zombie_type_featrues.ID
 				delete zombie_type.ID
 				// 不同模型不同的返回值
@@ -417,14 +418,29 @@ export default{
 				let item = {
 					id: predict.company_id,
 					final_pre: predict.final_pre,
+					zombie_pro: predict.zombie_pro,
+					featured_data: [],
 					zombie_type: [],
 					zombie_level: zombie_level.僵尸性程度,
 					grad_cam: [],
-					zombie_type_featrues: zombie_type_featrues,
-					contribute_matrix
+					contribute_matrix: [],
+					zombie_type_featrues: zombie_type_featrues
+				}
+				// 获取特征
+				for(let index in data.featured_data){
+					if(item.featured_data.length >= 3) break
+					const featured = data.featured_data[index]
+					if(featured.ID === item.id){
+						delete featured.ID
+						delete featured.企业类型
+						delete featured.区域
+						delete featured.控制人类型
+						delete featured.行业
+						item.featured_data.push(featured)
+					}
 				}
 				// 获取僵尸类型
-				for(let index in zombie_type)
+				for(let index in zombie_type){
 					if(zombie_type[index] != 0)
 						switch(index){
 							case "I": item.zombie_type.push(1);break;
@@ -433,9 +449,22 @@ export default{
 							case "IV": item.zombie_type.push(4);break;
 							case "V": item.zombie_type.push(5);break;
 						}
-				// 提取81个特征值
-				for(let key in grad_cam)
-					item.grad_cam.push(grad_cam[key])
+				}
+					
+				// 提取81个特征值贡献度-cnn
+				for(let key in grad_cam){
+					item.grad_cam.push({
+						text: this.$store.state.grad_cam_text[key],
+						value: Number(grad_cam[key].toFixed(2))
+					})
+				}
+				// 提取81个特征值贡献度stacking
+				for(let key in contribute_matrix){
+					item.contribute_matrix.push({
+						text: key,
+						value: Number(contribute_matrix[key].toFixed(2))
+					})
+				}
 				result.data.push(item)
 			}
 			this.resultData = result
@@ -457,7 +486,6 @@ export default{
 	created() {
 		this.selects = [...this.$store.state.selects]
 		this.inputs = [...this.$store.state.inputs]
-		this.cutData()
 	},
 	components:{
 		checkBox,

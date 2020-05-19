@@ -1,11 +1,12 @@
 <template>
 	<div class="degree">
-		<table>
+		<span class="title">僵尸类型表</span>
+		<table class="card">
 			<tr>
 				<th>类型</th>
 				<th>吸血表现</th>
 				<th>判别标准</th>
-				<th>僵尸特征描述</th>
+				<th colspan="2">僵尸特征描述</th>
 			</tr>
 			<tr
 				v-for="(item,index) in degree"
@@ -66,7 +67,29 @@ export default{
 
 <style scoped>
 .degree{
-	width: 100%;
 	white-space: pre-wrap;
+	display: inline-block;
+	z-index: 20;
+}
+.degree:hover .card{
+	display: block;
+}
+.degree .title{
+	border: var(--border1);
+	padding: 5px;
+	border-radius: 5px;
+	cursor: pointer;
+}
+.degree:hover .title{
+	color: #FFFFFF;
+	background-color: var(--origin);
+	border-color: transparent;
+}
+.degree .card{
+	position: absolute;
+	transform: translate(-100%,-50%);
+	max-width: 650px;
+	display: none;
+	box-shadow: var(--box-shadow1);
 }
 </style>
