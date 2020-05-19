@@ -345,7 +345,6 @@ export default{
 			})
 		},
 		submit(e){
-			this.resultData = ""
 			if(this.Data.length === 0) return
 			e.preventDefault()
 			let startTime = +(new Date())
@@ -388,86 +387,89 @@ export default{
 			}
 		},
 		cutData(data){
-			const modelType = {}
-			this.models.forEach(item => {
-				modelType[item.param] = item.active 
-			})
-			let result = {
-				time: (data.time/1000).toFixed(1),
-				data: [],
-				...modelType
-			}
-			for(let i in data.predict){
-				let predict = data.predict[i]
-				let zombie_type = data.zombie_type[i] //僵尸类型
-				let zombie_type_featrues = data.zombie_type_featrues[i] //僵尸特征
-				delete zombie_type_featrues.ID
-				delete zombie_type.ID
-				// 不同模型不同的返回值
-				let grad_cam={},zombie_level={},contribute_matrix={}
-				if(result.use_model_CNN){
-					grad_cam = data.grad_cam[i] //81个特征
-					delete grad_cam.ID
+			this.resultData = null
+			setTimeout(() => {
+				const modelType = {}
+				this.models.forEach(item => {
+					modelType[item.param] = item.active 
+				})
+				let result = {
+					time: (data.time/1000).toFixed(1),
+					data: [],
+					...modelType
 				}
-				if(result.use_model_stacking){
-					zombie_level = data.zombie_level[i] //僵尸程度
-					contribute_matrix = data.contribute_matrix[i] //贡献度
-					delete contribute_matrix.ID
-				}
-				
-				let item = {
-					id: predict.company_id,
-					final_pre: predict.final_pre,
-					zombie_pro: predict.zombie_pro,
-					featured_data: [],
-					zombie_type: [],
-					zombie_level: zombie_level.僵尸性程度,
-					grad_cam: [],
-					contribute_matrix: [],
-					zombie_type_featrues: zombie_type_featrues
-				}
-				// 获取特征
-				for(let index in data.featured_data){
-					if(item.featured_data.length >= 3) break
-					const featured = data.featured_data[index]
-					if(featured.ID === item.id){
-						delete featured.ID
-						delete featured.企业类型
-						delete featured.区域
-						delete featured.控制人类型
-						delete featured.行业
-						item.featured_data.push(featured)
+				for(let i in data.predict){
+					let predict = data.predict[i]
+					let zombie_type = data.zombie_type[i] //僵尸类型
+					let zombie_type_featrues = data.zombie_type_featrues[i] //僵尸特征
+					delete zombie_type_featrues.ID
+					delete zombie_type.ID
+					// 不同模型不同的返回值
+					let grad_cam={},zombie_level={},contribute_matrix={}
+					if(result.use_model_CNN){
+						grad_cam = data.grad_cam[i] //81个特征
+						delete grad_cam.ID
 					}
-				}
-				// 获取僵尸类型
-				for(let index in zombie_type){
-					if(zombie_type[index] != 0)
-						switch(index){
-							case "I": item.zombie_type.push(1);break;
-							case "II": item.zombie_type.push(2);break;
-							case "III": item.zombie_type.push(3);break;
-							case "IV": item.zombie_type.push(4);break;
-							case "V": item.zombie_type.push(5);break;
-						}
-				}
+					if(result.use_model_stacking){
+						zombie_level = data.zombie_level[i] //僵尸程度
+						contribute_matrix = data.contribute_matrix[i] //贡献度
+						delete contribute_matrix.ID
+					}
 					
-				// 提取81个特征值贡献度-cnn
-				for(let key in grad_cam){
-					item.grad_cam.push({
-						text: this.$store.state.grad_cam_text[key],
-						value: Number(grad_cam[key].toFixed(2))
-					})
+					const item = {
+						id: predict.company_id,
+						final_pre: predict.final_pre,
+						zombie_pro: predict.zombie_pro,
+						featured_data: [],
+						zombie_type: [],
+						zombie_level: zombie_level.僵尸性程度,
+						grad_cam: [],
+						contribute_matrix: [],
+						zombie_type_featrues: zombie_type_featrues
+					}
+					// 获取特征
+					for(let index in data.featured_data){
+						if(item.featured_data.length >= 3) break
+						const featured = {...data.featured_data[index]}
+						if(featured.ID === item.id){
+							delete featured.ID
+							delete featured.企业类型
+							delete featured.区域
+							delete featured.控制人类型
+							delete featured.行业
+							item.featured_data.push(featured)
+						}
+					}
+					// 获取僵尸类型
+					for(let index in zombie_type){
+						if(zombie_type[index] != 0)
+							switch(index){
+								case "I": item.zombie_type.push(1);break;
+								case "II": item.zombie_type.push(2);break;
+								case "III": item.zombie_type.push(3);break;
+								case "IV": item.zombie_type.push(4);break;
+								case "V": item.zombie_type.push(5);break;
+							}
+					}
+						
+					// 提取81个特征值贡献度-cnn
+					for(let key in grad_cam){
+						item.grad_cam.push({
+							text: this.$store.state.grad_cam_text[key],
+							value: Number(grad_cam[key].toFixed(2))
+						})
+					}
+					// 提取81个特征值贡献度stacking
+					for(let key in contribute_matrix){
+						item.contribute_matrix.push({
+							text: key,
+							value: Number(contribute_matrix[key].toFixed(2))
+						})
+					}
+					result.data.push(item)
 				}
-				// 提取81个特征值贡献度stacking
-				for(let key in contribute_matrix){
-					item.contribute_matrix.push({
-						text: key,
-						value: Number(contribute_matrix[key].toFixed(2))
-					})
-				}
-				result.data.push(item)
-			}
-			this.resultData = result
+				this.resultData = result
+			})
 		}
 	},
 	computed:{

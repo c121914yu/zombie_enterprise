@@ -160,8 +160,10 @@ export default{
 			}
 		},
 		reDraw_feature(){
-			if(featureChart)
+			if(featureChart){
 				featureChart.clear()
+				featureChart = ""
+			}
 			this.draw_featureData(this.zombie[this.currentIndex].featured_data)
 		},
 		cal_sum(){ // 计算总分布情况
@@ -175,6 +177,7 @@ export default{
 				if(key != "year")
 					this.features.push(key)
 			}
+			// console.log(data)
 		},
 		cal_zombieDis(){
 			zombieDis = [
@@ -243,8 +246,8 @@ export default{
 				this.describeInfo.feature_des += "<li>息税前利润不足以支付贷款利息</li>"
 			if(features.debt_inc > 0)
 				this.describeInfo.feature_des += "<li>经营状态持续恶化，资产负债率增加</li>"
-			console.log(enterprise)
-			console.log(this.describeInfo)
+			// console.log(enterprise)
+			// console.log(this.describeInfo)
 		},
 		draw_sum(){ // 计算
 			const sum = this.zombie.length + this.normal.length
@@ -426,7 +429,6 @@ export default{
 					}
 				]
 			}
-			console.log(typeDis)
 			let myChart = this.$echarts.init(document.getElementById("type-dis"))//初始化
 			myChart.setOption(option)
 			charts.push(myChart)
