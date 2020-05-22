@@ -101,19 +101,22 @@
 	grant_profit:政府补贴依赖程度
 */
 import typeTable from "./typeTable.vue"
-var data
-var charts = [],featureChart
-var zombieDis,typeDis
 export default{
 	data(){
 		return{
 			navs: ["分布情况","僵尸画像"],
+			currentRoute: "",
 			currentNav: 0,
 			currentIndex: 0,
 			currentFeature: 0,
+			data: "",
+			charts: [],
+			featureChart: "",
 			describeInfo: {},
 			zombie: [],
 			normal: [],
+			zombieDis: "",
+			typeDis: "",
 			features: [],
 		}
 	},
@@ -121,14 +124,14 @@ export default{
 		result: Object
 	},
 	watch:{
-		currentNav: 'changeNav',
+		currentNav: 'changeNav'
 	},
 	methods:{
 		changeNav(index){
-			charts.forEach(chart => {
+			this.charts.forEach(chart => {
 				chart.clear()
 			})
-			charts = []
+			this.charts = []
 			setTimeout(() => {
 				if(index === 0){
 					this.draw_sum()
@@ -160,27 +163,29 @@ export default{
 			}
 		},
 		reDraw_feature(){
-			if(featureChart){
-				featureChart.clear()
-				featureChart = ""
+			if(this.featureChart){
+				this.featureChart.clear()
+				this.featureChart = ""
 			}
 			this.draw_featureData(this.zombie[this.currentIndex].featured_data)
 		},
 		cal_sum(){ // 计算总分布情况
-			data.forEach(item => {
+			this.data.forEach(item => {
 				if(item.final_pre === 1)
 					this.zombie.push(item)
 				else
 					this.normal.push(item)
 			})
-			for(let key in data[0].featured_data[0]){
+			for(let key in this.data[0].featured_data[0]){
 				if(key != "year")
 					this.features.push(key)
 			}
+			if(this.zombie.length === 0)
+				this.navs = ["分布情况"]
 			// console.log(data)
 		},
 		cal_zombieDis(){
-			zombieDis = [
+			this.zombieDis = [
 				{name: "第Ⅰ类",value: 0},
 				{name: "第Ⅱ类",value: 0},
 				{name: "第Ⅲ类",value: 0},
@@ -189,30 +194,31 @@ export default{
 			]
 			this.zombie.forEach(item => {
 				item.zombie_type.forEach(type => {
-					zombieDis[type-1].value++
+					this.zombieDis[type-1].value++
 				})
 			})
 		},
 		cal_typeDis(){
-			typeDis = [
+			this.typeDis = [
 				{name: "0-0.2",value: 0},
 				{name: "0.2-0.4",value: 0},
 				{name: "0.4-0.6",value: 0},
 				{name: "0.6-0.8",value: 0},
 				{name: "0.8-1",value: 0}
 			]
-			data.forEach(item => {
+			this.data.forEach(item => {
 				for(let i=1;i<=5;i++)
 					if(item.zombie_level < 0.2*i){
-						typeDis[i-1].value++
+						this.typeDis[i-1].value++
 						break
 					}
 			})
 		},
 		cal_enterpriseInfo(){
 			const enterprise = this.zombie[this.currentIndex]
+			if(!enterprise) return
 			this.describeInfo = {
-				id: enterprise.id,
+				id: enterprise.company_id,
 				zombie_pro: (enterprise.zombie_pro*100).toFixed(2)+"%",
 				grad_cam: enterprise.grad_cam,
 				contribute_matrix: enterprise.contribute_matrix,
@@ -313,14 +319,14 @@ export default{
 			}
 			let myChart = this.$echarts.init(document.getElementById("sum"))//初始化
 			myChart.setOption(option)
-			charts.push(myChart)
+			this.charts.push(myChart)
 		},
 		draw_zombie_dis(){ // 僵尸类型分布
-			const sum = zombieDis.reduce((sum,item) => {
+			const sum = this.zombieDis.reduce((sum,item) => {
 				return sum+item.value
 			},0)
 			const pro = {}
-			zombieDis.forEach(item => {
+			this.zombieDis.forEach(item => {
 				if(item.value === 0)
 					pro[item.name] = "0%"
 				else
@@ -364,15 +370,15 @@ export default{
 						fontSize: 16,
 						fontWeight: 600,
 					},
-					data: zombieDis
+					data: this.zombieDis
 				}
 			}
 			let myChart = this.$echarts.init(document.getElementById("zombie-dis"))//初始化
 			myChart.setOption(option)
-			charts.push(myChart)
+			this.charts.push(myChart)
 		},
 		draw_type_dis(){ // 僵尸程度分布
-			const sum = typeDis.reduce((sum,item) => {
+			const sum = this.typeDis.reduce((sum,item) => {
 				return sum+item.value
 			},0)
 			let option = {
@@ -425,13 +431,13 @@ export default{
 									return `${param.data.value}家`
 							}
 						},
-						data: typeDis
+						data: this.typeDis
 					}
 				]
 			}
 			let myChart = this.$echarts.init(document.getElementById("type-dis"))//初始化
 			myChart.setOption(option)
-			charts.push(myChart)
+			this.charts.push(myChart)
 		},
 		draw_type(data){ // 僵尸程度
 			const val = Math.round((data*100).toFixed(2))
@@ -442,7 +448,6 @@ export default{
 				},
 				xAxis: {
 					type: "category",
-					data: ["第三类"]
 				},
 				yAxis: {
 					type: "value",
@@ -499,7 +504,7 @@ export default{
 			}
 			let myChart = this.$echarts.init(document.getElementById("type"))//初始化
 			myChart.setOption(option)
-			charts.push(myChart)
+			this.charts.push(myChart)
 		},
 		draw_featureData(feature){ // 僵尸企业特征
 			const feature_key = this.features[this.currentFeature]
@@ -519,7 +524,7 @@ export default{
 					name: "年份",
 					type: 'category',
 					boundaryGap: false,
-					data : [2015,2016,2017]
+					data : data_year
 				},
 				yAxis : {
 					type : 'value'
@@ -539,23 +544,26 @@ export default{
 					}
 				]
 			}
-			featureChart = this.$echarts.init(document.getElementById("feature-data"))//初始化
-			featureChart.setOption(option)
+			this.featureChart = this.$echarts.init(document.getElementById("feature-data"))//初始化
+			this.featureChart.setOption(option)
 		}
 	},
 	created() {
-		data = this.result.data
+		this.currentRoute = this.$route.name
+		this.data = [...this.result.data]
 		this.cal_sum()
 		this.cal_zombieDis()
 		this.cal_typeDis()
 	},
 	mounted() {
+		if(this.data.length === 1)
+			this.currentNav = 1
 		this.changeNav(this.currentNav)
 		
 		window.onresize = () => {
 			setTimeout(() => {
-				charts.forEach(chart => {
-					chart.resize()
+				this.charts.forEach(chart => {
+					this.chart.resize()
 				})
 			})
 		}

@@ -3,10 +3,11 @@ import {
 	postAction
 } from './manage.js'
 
-const getFile = (params) => getAction("",params)
+const Query = (url) => getAction(`query/${url}/`)
 
 const Predict = (data) => postAction("predict/",data)
 
 export {
+	Query,
 	Predict
 }

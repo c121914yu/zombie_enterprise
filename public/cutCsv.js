@@ -11,7 +11,7 @@ onmessage = function(e) {
 	
 	// 遍历resultID，对应下标的Data若不为数组则查询对应的fileData
 	for(let i=0;i<resultID.length;i++){
-		if(i >= 10 && i<= resultID.length-5) continue
+		// if(i >= 10 && i<= resultID.length-5) continue
 		if(!Data[i]){
 			Data[i] = getData(resultID[i])
 			toStr(Data[i])

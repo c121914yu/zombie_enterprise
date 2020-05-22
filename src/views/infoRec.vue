@@ -369,13 +369,14 @@ export default{
 					...modelType,
 					merged: e.data
 				}
-				this.cutData(testData)
 				load.hide()
 				console.log("字符串切割时间: " + (new Date() - startTime) / 1000 + "s")
 				startTime = +(new Date())
+				this.cutData(testData)
 				// Predict(JSON.stringify(data))
 				// .then(res => {
 				// 	console.log("请求运行时间: " + (new Date() - startTime) / 1000 + "s")
+				// 	this.cutData(res.data)
 				// 	let a = document.createElement("a")
 				// 	a.download = "data.json"
 				// 	let blob = new Blob([JSON.stringify(res.data,"","\t")])
@@ -431,8 +432,8 @@ export default{
 					for(let index in data.featured_data){
 						if(item.featured_data.length >= 3) break
 						const featured = {...data.featured_data[index]}
-						if(featured.ID === item.id){
-							delete featured.ID
+						if(featured.company_id === item.id){
+							delete featured.company_id
 							delete featured.企业类型
 							delete featured.区域
 							delete featured.控制人类型

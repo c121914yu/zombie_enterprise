@@ -56,10 +56,13 @@ button{
 	border-radius: 5px;
 	cursor: pointer;
 	color: #ffffff;
-	background-color: var(--green1);
+	background-color: var(--origin);
+}
+button:hover{
+	background-color: #fd8d33;
 }
 button:active{
-	transform: scale(1.1);
+	transform: scale(0.9);
 	/* 去除button点击背景样式 */
 	-webkit-user-select: none;
 	-moz-user-focus: none;

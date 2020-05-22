@@ -4,7 +4,6 @@ Vue.use(VueRouter)
 
 import Home from "../views/Home.vue"
 import infoRec from "../views/infoRec.vue"
-import Batch from "../views/BatchRec.vue"
 import ID from "../views/IDRec.vue"
 
 const routes = [
@@ -17,11 +16,6 @@ const routes = [
 		path: '/infoRec',
 		name: 'infoRec',
 		component: infoRec
-	},
-	{
-		path: '/BatchRec',
-		name: 'batch',
-		component: Batch
 	},
 	{
 		path: '/IDRec',

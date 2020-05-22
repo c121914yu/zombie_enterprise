@@ -70,10 +70,10 @@ export default{
 		opacity: 1;
 	}
 	25%{
-		top: 60px;
+		top: 40px;
 	}
 	85%{
-		top: 60px;
+		top: 40px;
 	}
 	100%{
 		top: -50px;
