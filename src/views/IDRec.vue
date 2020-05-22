@@ -115,7 +115,13 @@ export default{
 			this.idList.splice(index,1)
 		},
 		search(){
-			if(this.idList.length === 0) return
+			if(this.idList.length === 0){
+				this.$showToast({
+					type: "warn",
+					text: "ID数量不能为空"
+				})
+				return
+			}
 			let startTime = new Date()
 			this.cutData(testData,startTime)
 			// Query(this.idList[0].id)
