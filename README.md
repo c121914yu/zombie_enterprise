@@ -7,6 +7,9 @@
 > npm run serve - 启动开发环境  
 > npm run build - 打包  s
 
+### 1.0.6
+1. 主页图表
+
 ### 1.0.5
 1. ID查询模块
 2. 修改部分绘图BUG
