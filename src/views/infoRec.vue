@@ -369,10 +369,12 @@ export default{
 					...modelType,
 					merged: e.data
 				}
-				load.hide()
 				console.log("字符串切割时间: " + (new Date() - startTime) / 1000 + "s")
 				startTime = +(new Date())
-				this.cutData(testData)
+				setTimeout(() => {
+					this.cutData(testData)
+					load.hide()
+				},1000)
 				// Predict(JSON.stringify(data))
 				// .then(res => {
 				// 	console.log("请求运行时间: " + (new Date() - startTime) / 1000 + "s")

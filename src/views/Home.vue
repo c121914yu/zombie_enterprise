@@ -19,7 +19,6 @@
 
 <script>
 import homeData from "../assets/homeData.json"
-import axios from "axios"
 var load_amount = 3000,load_time=200
 export default{
 	data(){

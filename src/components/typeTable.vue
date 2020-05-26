@@ -30,7 +30,7 @@ export default{
 					type:"第Ⅰ类",
 					suckBlood:"政府补贴",
 					standard:"grant_prpofit>1\nEBIT>0\nLev>50%",
-					describe:"资产负载率超过50%，日常经营活动能产生利润，但需要靠政府补贴来维持经营状态，从而避免被\"特殊处理\""
+					describe:"资产负债率超过50%，日常经营活动能产生利润，但需要靠政府补贴来维持经营状态，从而避免被\"特殊处理\""
 				},
 				{
 					type:"第Ⅱ类",

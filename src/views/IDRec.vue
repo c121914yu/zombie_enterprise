@@ -67,7 +67,7 @@ export default{
 					type:"第Ⅰ类",
 					suckBlood:"政府补贴",
 					standard:"grant_prpofit>1\nEBIT>0\nLev>50%",
-					describe:"资产负载率超过50%，日常经营活动能产生利润，但需要靠政府补贴来维持经营状态，从而避免被\"特殊处理\""
+					describe:"资产负债率超过50%，日常经营活动能产生利润，但需要靠政府补贴来维持经营状态，从而避免被\"特殊处理\""
 				},
 				{
 					type:"第Ⅱ类",
@@ -122,8 +122,12 @@ export default{
 				})
 				return
 			}
+			let load = this.$loading()
 			let startTime = new Date()
-			this.cutData(testData,startTime)
+			setTimeout(() => {
+				this.cutData(testData,startTime)
+				load.hide()
+			},1000)
 			// Query(this.idList[0].id)
 			// .then(res => {
 			// 	if(res.data.error_msg != ""){
@@ -141,7 +145,7 @@ export default{
 			this.resultData = null
 			setTimeout(() => {
 				let result = {
-					time: (new Date-startTime).toFixed(1),
+					time: ((new Date-startTime)/1000).toFixed(1),
 					data: [],
 				}
 				for(let i in data.predict){
