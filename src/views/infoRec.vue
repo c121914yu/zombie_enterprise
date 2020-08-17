@@ -232,7 +232,7 @@ import check from '../components/Check.vue'
 import Select from '../components/Select.vue'
 import result from '../components/results/Result.vue'
 import { Predict } from '../assets/axios/api.js'
-import testData from '../assets/data.json'
+import testData from '../assets/data2.json'
 export default {
   data() {
     return {
@@ -314,6 +314,7 @@ export default {
       this.changeIndex(-1)
     },
     checkFile(e) {
+      if (e.target.files.length === 0) return
       //选择文件
       let load = this.$loading()
       this.Data.forEach((item) => {

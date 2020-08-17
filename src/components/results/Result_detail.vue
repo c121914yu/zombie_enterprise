@@ -292,6 +292,7 @@ export default {
   position: relative;
   font-size: 1em;
   z-index: 11;
+  transition: var(--hover-speed);
 }
 .detail .grad-cam li.contribute {
   background-color: #ffffff;
