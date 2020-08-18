@@ -3,7 +3,7 @@
     <Nav></Nav>
     <div class="view">
       <keep-alive>
-        <router-view class="body" />
+        <router-view />
       </keep-alive>
     </div>
   </div>
@@ -14,10 +14,10 @@ import Nav from './components/Nav.vue'
 export default {
   mounted() {
     AOS.init({
-      duration: 600,
-      easing: 'ease-in-sine',
-      delay: 30,
-      anchor: '#selector',
+      duration: 1000,
+      easing: 'ease-in-out',
+      delay: 100,
+      anchorPlacement: 'bottom-bottom',
       once: true,
     })
   },
@@ -29,7 +29,6 @@ export default {
 
 <style>
 @import url('./assets/common.css');
-@import url('./assets/icon/iconfont.css');
 #app {
   width: 100%;
   min-height: 100vh;
@@ -40,14 +39,6 @@ export default {
 .view {
   width: 100%;
   min-height: 100vh;
-  background-color: rgba(120, 210, 236, 0.1);
-  padding-left: 170px;
-}
-.view .body {
-  margin: 0 auto;
-  width: 100%;
-  height: 100%;
-  max-width: 1000px;
-  padding: 0 10px 10px;
+  padding-top: 60px;
 }
 </style>

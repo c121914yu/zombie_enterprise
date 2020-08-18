@@ -7,7 +7,7 @@ Vue.config.productionTip = false
 
 // 引入echarts
 const echarts = require('echarts')
-import 'echarts-gl'
+require('echarts/map/js/china.js')
 Vue.prototype.$echarts = echarts
 
 import showModel from "./components/showModel/showModel.js"
