@@ -1,60 +1,82 @@
 <template>
   <div class="compare">
-    <div class="card check-id">
-      <div class="id-list">
+    <div style="backgroundColor:#FADBD8">
+      <div class="content row1">
+        <div class="card check-id">
+          <div class="id-list">
+            <div
+              class="id"
+              :class="item.checked ? 'active':''"
+              v-for="(item, index) in idList"
+              :key="index"
+              @click="checkId(index)"
+            >{{item.id}}</div>
+          </div>
+          <div class="btns">
+            <button
+              style="backgroundColor:#e74c3c"
+              @click="compare"
+            >比较</button>
+            <button
+              style="backgroundColor:#5d7092"
+              @click="reset"
+            >重置</button>
+          </div>
+        </div>
+        <!-- 僵尸程度 -->
         <div
-          class="id"
-          :class="item.checked ? 'active':''"
-          v-for="(item, index) in idList"
-          :key="index"
-          @click="checkId(index)"
-        >{{item.id}}</div>
-      </div>
-      <div class="btns">
-        <button @click="compare">比较</button>
-        <button
-          style="backgroundColor:#5d7092"
-          @click="reset"
-        >重置</button>
+          class="chart"
+          :style="degreeChart ? '':'opacity:0'"
+          id="degree"
+        ></div>
       </div>
     </div>
-    <!-- 僵尸程度 -->
-    <div
-      class="card charts"
-      :style="degreeChart ? '':'opacity:0'"
-      id="degree"
-    ></div>
+
     <!-- 画像描述 -->
-    <ul
-      :style="i<=describes.length ? '':'opacity:0'"
-      class="describe card"
-      v-for="i in 3"
-      :key="i"
+    <div
+      style="backgroundColor:#FCF3CF"
+      v-if="describes.length>0"
     >
-      <div v-if="i<=describes.length">
-        <h3 class="center">{{describes[i-1].id}}画像</h3>
-        <li>为 <strong>{{describes[i-1].type}}</strong>僵尸企业</li>
-        <li>判断为僵尸的概率高达 <strong>{{describes[i-1].zombie_pro}}</strong></li>
-        <div v-html="describes[i-1].feature_des"></div>
+      <div class="content describe">
+        <ul
+          :style="i<=describes.length ? '':'opacity:0'"
+          v-for="i in 3"
+          :key="i"
+        >
+          <div v-if="i<=describes.length">
+            <h3 class="center">{{describes[i-1].id}}画像</h3>
+            <li><strong>{{describes[i-1].type}}</strong>僵尸企业</li>
+            <li>判断为僵尸的概率高达 <strong>{{describes[i-1].zombie_pro}}</strong></li>
+            <div v-html="describes[i-1].feature_des"></div>
+          </div>
+        </ul>
       </div>
-    </ul>
+
+    </div>
+
     <!-- 特征方块-cnn -->
     <div
-      class="card"
-      :style="i<=describes.length ? '':'opacity:0'"
-      v-for="i in 3"
-      :key="i+3*1"
+      style="backgroundColor:#EAEDED"
+      v-if="describes.length>0"
     >
-      <div v-if="i<=describes.length">
-        <p class="center">特征贡献色块-cnn模型</p>
-        <p class="remark">包含81个特征对判断为僵尸企业的贡献度，每个色块代表一个特征，<strong style="color: #e86452;">红色</strong>越深表示贡献度越大。</p>
-        <ul class="grad-cam center">
-          <li
-            v-for="(item,index) in describes[i-1].grad_cam"
-            :key="index"
-            class="center"
-            :class="item.value === 0 ? '' : 'contribute'"
-            :style="[
+      <h3 class="content"><i class="iconfont icon-dian"></i>僵尸特征色块——cnn</h3>
+      <div class="content grid">
+        <div
+          class="item"
+          :style="i<=describes.length ? '':'opacity:0'"
+          v-for="i in 3"
+          :key="i+3*1"
+        >
+          <div v-if="i<=describes.length">
+            <p class="center"><strong>特征贡献色块-cnn模型</strong></p>
+            <p class="remark center"><strong style="color: #e86452;">红色</strong>越深表示影响度越大。</p>
+            <ul class="grad-cam center">
+              <li
+                v-for="(item,index) in describes[i-1].grad_cam"
+                :key="index"
+                class="center"
+                :class="item.value === 0 ? '' : 'contribute'"
+                :style="[
               {
                 border: item.value === 0 ? 'var(--border1)' : ''
               },  
@@ -65,33 +87,42 @@
                 transform: hoverIndex_cnn === index ? 'scale(1.3)': 'scale(1)'
               }
             ]"
-            @click="getFeatureIndex(item.text)"
-            @mouseenter="hoverIndex_cnn=index"
-            @mouseleave="hoverIndex_cnn=null"
-          >
-            <div
-              class="message"
-              :style="hoverIndex_cnn === index ? 'display:block':''"
-            >{{item.text}}: {{item.value}}</div>
-          </li>
-        </ul>
+                @click="getFeatureIndex(item.text)"
+                @mouseenter="hoverIndex_cnn=index"
+                @mouseleave="hoverIndex_cnn=null"
+              >
+                <div
+                  class="message"
+                  :style="hoverIndex_cnn === index ? 'display:block':''"
+                >{{item.text}}: {{item.value}}</div>
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
+
     <!-- 特征贡献色块-stacking模型 -->
     <div
-      :style="i<=describes.length ? '':'opacity:0'"
-      class="card"
-      v-for="i in 3"
-      :key="i+3*2"
+      style="backgroundColor:#FBFCFC"
+      v-if="describes.length>0"
     >
-      <div v-if="i<=describes.length">
-        <p class="center">特征贡献色块-stacking模型</p>
-        <p class="remark">包含81个特征对判断为僵尸企业的贡献度，每个色块代表一个特征，<strong style="color: #e86452;">红色</strong>越深表示贡献度正影响越大，<strong style="color: #1e9493;">绿色</strong>代表对贡献度负影响越大。</p>
-        <ul class="grad-cam center">
-          <li
-            class="center"
-            :class="item.value === 0 ? '' : 'contribute'"
-            :style="[
+      <h3 class="content"><i class="iconfont icon-dian"></i>僵尸特征色块——stacking</h3>
+      <div class="content grid">
+        <div
+          :style="i<=describes.length ? '':'opacity:0'"
+          class="item"
+          v-for="i in 3"
+          :key="i+3*2"
+        >
+          <div v-if="i<=describes.length">
+            <p class="center"><strong>特征影响色块-stacking模型</strong></p>
+            <p class="remark center"><strong style="color: #e86452;">红色</strong>越深表示正影响越大,<strong style="color: #1e9493;">绿色</strong>表示负影响越大。</p>
+            <ul class="grad-cam center">
+              <li
+                class="center"
+                :class="item.value === 0 ? '' : 'contribute'"
+                :style="[
               {
                 border: item.value === 0 ? 'var(--border1)' : ''
               },  
@@ -102,37 +133,49 @@
                 transform: hoverIndex_stacking === index ? 'scale(1.3)': 'scale(1)'
               }
             ]"
-            v-for="(item,index) in describes[i-1].contribute_matrix"
-            :key="index"
-            @click="getFeatureIndex(item.text)"
-            @mouseenter="hoverIndex_stacking=index"
-            @mouseleave="hoverIndex_stacking=null"
-          >
-            <div
-              class="message"
-              :style="hoverIndex_stacking === index ? 'display:block':''"
-            >{{item.text}}: {{item.value}}</div>
-          </li>
-        </ul>
+                v-for="(item,index) in describes[i-1].contribute_matrix"
+                :key="index"
+                @click="getFeatureIndex(item.text)"
+                @mouseenter="hoverIndex_stacking=index"
+                @mouseleave="hoverIndex_stacking=null"
+              >
+                <div
+                  class="message"
+                  :style="hoverIndex_stacking === index ? 'display:block':''"
+                >{{item.text}}: {{item.value}}</div>
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
+
     <!-- 特征曲线 -->
     <div
-      class="card feature"
-      :style="featureChart ? '':'opacity:0'"
+      style="backgroundColor:#D0ECE7"
+      v-if="describes.length>0"
     >
-      <i
-        class="iconfont icon-last"
-        @click="changeFeatureIndex(-1)"
-      ></i>
+      <h3
+        class="content"
+        style="color:#16A085;padding:10px 0 0"
+      ><i class="iconfont icon-dian"></i>{{features[currentFeature]}}</h3>
       <div
-        class="chart"
-        id="feature"
-      ></div>
-      <i
-        class="iconfont icon-next"
-        @click="changeFeatureIndex(1)"
-      ></i>
+        class="content feature"
+        :style="featureChart ? '':'opacity:0'"
+      >
+        <i
+          class="iconfont icon-last"
+          @click="changeFeatureIndex(-1)"
+        ></i>
+        <div
+          class="chart"
+          id="feature"
+        ></div>
+        <i
+          class="iconfont icon-next"
+          @click="changeFeatureIndex(1)"
+        ></i>
+      </div>
     </div>
   </div>
 </template>
@@ -254,15 +297,13 @@ export default {
         this.featureChart.clear()
         this.featureChart = null
       }
-      this.draw_featureData()
+      setTimeout(() => {
+        this.draw_featureData()
+      })
     },
     // 绘制僵尸程度
     draw_degree() {
       let option = {
-        title: {
-          text: '僵尸程度',
-          left: 'center',
-        },
         xAxis: {
           type: 'category',
           data: this.checkedEnterprise.map((item) => item.id),
@@ -270,6 +311,10 @@ export default {
         yAxis: {
           type: 'value',
           name: '僵尸程度%',
+          nameTextStyle: {
+            color: '#e74c3c',
+            fontSize: 16,
+          },
         },
         series: [
           {
@@ -290,6 +335,7 @@ export default {
               show: true, //开启显示
               position: 'top', //在上方显示
               fontSize: 16,
+              color: '#e74c3c',
               formatter: (param) => {
                 if (param.data === 0) return '0%'
                 else return `${param.data}%`
@@ -320,9 +366,6 @@ export default {
       })
 
       let option = {
-        title: {
-          text: feature_key,
-        },
         legend: {
           right: 0,
           data: data.map((item) => item.id.toString()),
@@ -338,6 +381,12 @@ export default {
         },
         yAxis: {
           type: 'value',
+        },
+        grid: {
+          x: 70,
+          y: 40,
+          x2: 40,
+          y2: 20,
         },
         series: data.map((item) => {
           return {
@@ -365,57 +414,87 @@ export default {
 </script>
 
 <style scoped>
-.compare {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-gap: 10px;
+.compare .content {
+  display: flex;
 }
-.compare .check-id {
-  width: 100%;
+.compare h3.content {
+  padding: 10px 0 0 0;
+}
+
+.compare .row1 .chart {
+  flex: 1;
   height: 300px;
 }
-.compare .check-id .id-list {
+.compare .row1 .check-id {
+  width: 50%;
+  max-width: 400px;
+  height: 300px;
+}
+.compare .row1 .check-id .id-list {
   height: 250px;
-  border: var(--border1);
+  color: #e74c3c;
   border-radius: 5px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   overflow: auto;
 }
-.compare .check-id .id-list .id {
+.compare .row1 .check-id .id-list .id {
   margin: 5px auto;
   width: 80%;
   height: 30px;
   line-height: 30px;
   text-align: center;
-  border: var(--border1);
+  border: 1px solid#e74c3c;
   border-radius: 5px;
   cursor: pointer;
 }
-.compare .check-id .id-list .id:hover {
+.compare .row1 .check-id .id-list .id:hover {
   color: #fff;
-  background-color: rgba(255, 152, 69, 0.8);
+  background-color: rgba(231, 77, 60, 0.8);
 }
-.compare .check-id .id-list .id.active {
+.compare .row1 .check-id .id-list .id.active {
   color: #fff;
-  background-color: var(--origin);
+  background-color: #e74c3c;
 }
-.compare .check-id .btns {
+.compare .row1 .check-id .btns {
   margin-top: 5px;
   display: flex;
   align-items: center;
   justify-content: space-around;
 }
-.compare .check-id .btns button {
+.compare .row1 .check-id .btns button {
   width: 30%;
 }
-
-.compare .charts {
-  margin: 0;
+.compare .row1 .check-id .id-list::-webkit-scrollbar-track {
+  background: #fdedec;
+  border-radius: 5px;
 }
-.compare .charts#degree {
-  grid-column-start: 2;
-  grid-column-end: 4;
+.compare .row1 .check-id .id-list::-webkit-scrollbar-thumb {
+  background-color: #e74c3c;
+}
+.compare .row1 .check-id .id-list::-webkit-scrollbar-thumb:hover {
+  background-color: #e74c3c;
+}
+
+.compare .describe {
+  min-height: 220px;
+  color: #f39c12;
+}
+.compare .describe ul {
+  margin: 0 10px;
+  flex: 1;
+  list-style: disc;
+  padding: 10px 0 10px 20px;
+  border: 1px solid #f39c12;
+  border-radius: 10px;
+}
+
+.compare .grid .item {
+  flex: 1;
+  color: #4d5656;
+}
+.compare .grid .item p {
+  white-space: pre-line;
 }
 
 .compare.compare .grad-cam {
@@ -457,8 +536,7 @@ export default {
 
 .compare .feature {
   height: 300px;
-  grid-column-start: 1;
-  grid-column-end: 4;
+  max-width: 900px;
   display: flex;
   align-items: center;
   overflow: hidden;

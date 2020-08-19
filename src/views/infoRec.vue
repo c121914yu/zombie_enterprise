@@ -1,221 +1,227 @@
 <template>
   <div class="info-res">
-    <header class="card">
-      <h3>所需信息</h3>
-      <p>僵尸企业识别需要提供企业三年的数据信息,包含企业所属行业，类型，所属区域，控制人类型等28个信息。</p>
+    <!-- 操作说明 -->
+    <header style="backgroundColor:#D4E6F1">
+      <div class="content explain">
+        <h3><i class="iconfont icon-dian"></i>所需信息</h3>
+        <p>僵尸企业识别需要提供企业三年的数据信息,包含企业所属行业，类型，所属区域，控制人类型等28个信息。</p>
 
-      <h3>数据填写方式</h3>
-      <p>通过点击<strong>增加企业</strong>可以增加一组空白企业信息进行手动填写；也可以通过<strong>csv导入</strong>从文件中批量导入数据,导入数据将自动填写至输入框,可根据需要进行修改或填补。
-        <a
-          href="http://load.jinlongyuchitang.cn/temp.csv?attname="
-          target="_blank"
-        >
-          csv文件模板
-        </a>
-        导入数据注意事项:
-      </p>
-      <ul>
-        <li>首行标题文本请勿删除。</li>
-        <li>可根据需求划分为多个文件,但必须保证第一列为企业的唯一ID。</li>
-        <li>保存为csv UTF-8(逗号分隔)格式。</li>
-      </ul>
+        <h3><i class="iconfont icon-dian"></i>数据填写方式</h3>
+        <p>通过点击<strong>增加企业</strong>可以增加一组空白企业信息进行手动填写；也可以通过<strong>csv导入</strong>从文件中批量导入数据,导入数据将自动填写至输入框,可根据需要进行修改或填补。
+          <a
+            href="http://load.jinlongyuchitang.cn/temp.csv?attname="
+            target="_blank"
+          >
+            <strong>csv文件模板</strong>
+          </a>
+          导入数据注意事项:
+        </p>
+        <ul>
+          <li>首行标题文本请勿删除。</li>
+          <li>可根据需求划分为多个文件,但必须保证第一列为企业的唯一ID。</li>
+          <li>保存为csv UTF-8(逗号分隔)格式。</li>
+        </ul>
 
-      <h3>三种模型</h3>
-      <p>系统提供3种模型使用，不同模型运算的时间不同，可以选择单个模型或者联合多个模型使用:</p>
-      <ul>
-        <li>CNN: 基于grad_cam的特征贡献矩阵,可获取:僵尸程度,企业画像文字描述,同类企业推荐,详细企业画像。</li>
-        <li>stacking: 基于shap和模型特征重要度的特征贡献矩阵,可获取:僵尸程度,企业画像文字描述,同类企业推荐,详细企业画像,特征贡献矩阵。</li>
-        <li>deeptree: 基于shap和模型特征重要度的特征贡献矩阵,可获取:僵尸程度,企业画像文字描述,同类企业推荐,详细企业画像。</li>
-      </ul>
+        <h3><i class="iconfont icon-dian"></i>三种模型</h3>
+        <p>系统提供3种模型使用，不同模型运算的时间不同，可以选择单个模型或者联合多个模型使用:</p>
+        <ul>
+          <li>CNN: 基于grad_cam的特征贡献矩阵,可获取:僵尸程度,企业画像文字描述,同类企业推荐,详细企业画像。</li>
+          <li>stacking: 基于shap和模型特征重要度的特征贡献矩阵,可获取:僵尸程度,企业画像文字描述,同类企业推荐,详细企业画像,特征贡献矩阵。</li>
+          <li>deeptree: 基于shap和模型特征重要度的特征贡献矩阵,可获取:僵尸程度,企业画像文字描述,同类企业推荐,详细企业画像。</li>
+        </ul>
 
-      <h3>识别结果</h3>
-      <ol>
-        <li>对所有企业画像分布的统计，包括数量、类型、程度分布。</li>
-        <li>每个企业的详细画像，包括企业画像的文字描述，具体僵尸程度值，不同特征值对结果的影响，不同特征的具体值。</li>
-        <li>可以选择至多3个企业进行同屏并列比较。</li>
-      </ol>
+        <h3><i class="iconfont icon-dian"></i>识别结果</h3>
+        <ol>
+          <li>对所有企业画像分布的统计，包括数量、类型、程度分布。</li>
+          <li>每个企业的详细画像，包括企业画像的文字描述，具体僵尸程度值，不同特征值对结果的影响，不同特征的具体值。</li>
+          <li>可以选择至多3个企业进行同屏并列比较。</li>
+        </ol>
+      </div>
     </header>
 
-    <div class="container card">
-      <div class="slide">
-        <h3>企业信息</h3>
-        <label class="check-file btn">
-          <input
-            type="file"
-            @change="checkFile"
-            multiple
-          >
-          csv导入
-        </label>
+    <!-- 内容输入 -->
+    <div style="backgroundColor:#A3E4D7">
+      <div class="content container">
+        <div class="slide">
+          <h3><i class="iconfont icon-dian"></i>企业信息</h3>
+          <label class="check-file btn">
+            <input
+              type="file"
+              @change="checkFile"
+              multiple
+            >
+            csv导入
+          </label>
 
-        <div
-          class="btn"
-          @click="addEn"
-        >
-          增加企业
-        </div>
-
-        <div
-          v-if="resultID.length > 0"
-          class="btn"
-          @click="removeEn"
-        >
-          删除当前企业
-        </div>
-
-        <div
-          v-if="resultID.length > 0"
-          class="btn"
-          :class="isOperate ? 'active' : ''"
-          @click="isOperate=!isOperate"
-        >
-          {{isOperate ? "隐藏输入" : "手动填写"}}
-        </div>
-
-        <div
-          class="id"
-          v-if="Data[currentIndex]"
-        >
-          <span>ID:</span>
-          <input
-            v-if="!search"
-            type="number"
-            placeholder="当前企业编号ID"
-            min=0
-            step="1"
-            @input="inputID"
-            :value="Data[currentIndex][0].ID"
-          >
-          <input
-            v-if="search"
-            type="number"
-            placeholder="ID查询企业"
-            min=0
-            step="1"
-            v-model="searchText"
-          />
-          <i
-            class="iconfont search"
-            :class="search ? 'icon-error' : 'icon-search'"
-            @click="search=!search"
-          >
-          </i>
           <div
-            v-if="search"
-            class="search-list"
+            class="btn"
+            @click="addEn"
           >
+            增加企业
+          </div>
+
+          <div
+            v-if="resultID.length > 0"
+            class="btn"
+            @click="removeEn"
+          >
+            删除当前企业
+          </div>
+
+          <div
+            v-if="resultID.length > 0"
+            class="btn"
+            :class="isOperate ? 'active' : ''"
+            @click="isOperate=!isOperate"
+          >
+            {{isOperate ? "隐藏输入" : "手动填写"}}
+          </div>
+
+          <div
+            class="id"
+            v-if="Data[currentIndex]"
+          >
+            <span>ID:</span>
+            <input
+              v-if="!search"
+              type="number"
+              placeholder="当前企业编号ID"
+              min=0
+              step="1"
+              @input="inputID"
+              :value="Data[currentIndex][0].ID"
+            >
+            <input
+              v-if="search"
+              type="number"
+              placeholder="ID查询企业"
+              min=0
+              step="1"
+              v-model="searchText"
+            />
+            <i
+              class="iconfont search"
+              :class="search ? 'icon-error' : 'icon-search'"
+              @click="search=!search"
+            >
+            </i>
+            <div
+              v-if="search"
+              class="search-list"
+            >
+              <div
+                class="item"
+                v-for="id in searchID"
+                :key="id"
+                @click="searchRes(id)"
+              >
+                {{id}}
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="page"
+            v-show="resultID.length > 0"
+          >
+            <i
+              class="iconfont icon-last"
+              @click="changeIndex(-1)"
+            ></i>
+            <p>
+              <input
+                class="current-index"
+                type="number"
+                step="1"
+                :value="currentIndex+1"
+                @input="inputIndex"
+                @focusout="outInputIndex"
+              >
+              / {{resultID.length}}
+            </p>
+            <i
+              class="iconfont icon-next"
+              @click="changeIndex(1)"
+            ></i>
+          </div>
+        </div>
+
+        <form
+          v-if="Data.length>0"
+          :style="isOperate ? 'max-height: 5000px' : 'max-height: 0'"
+        >
+          <p class="remark">金额单位: 万元人民币</p>
+          <!-- 年份选择 -->
+          <div class="years">
+            <p
+              title="复制第一年数据"
+              class="copy btn"
+              @click="copy"
+            >拷贝</p>
+            <div
+              class="year"
+              :class="currentYear === index ? 'active' : ''"
+              v-for="(item,index) in 3"
+              :key="index"
+              @click="currentYear=index"
+            >
+              {{Data[currentIndex][index].year === "" ? '第'+(index+1)+'年' : Data[currentIndex][index].year+"年"}}
+            </div>
+          </div>
+          <!-- 主体输入 -->
+          <div class="content">
             <div
               class="item"
-              v-for="id in searchID"
-              :key="id"
-              @click="searchRes(id)"
+              v-for="item in selects"
+              :key="item.text"
             >
-              {{id}}
-            </div>
-          </div>
-        </div>
-
-        <div
-          class="page"
-          v-show="resultID.length > 0"
-        >
-          <i
-            class="iconfont icon-last"
-            @click="changeIndex(-1)"
-          ></i>
-          <p>
-            <input
-              class="current-index"
-              type="number"
-              step="1"
-              :value="currentIndex+1"
-              @input="inputIndex"
-              @focusout="outInputIndex"
-            >
-            / {{resultID.length}}
-          </p>
-          <i
-            class="iconfont icon-next"
-            @click="changeIndex(1)"
-          ></i>
-        </div>
-      </div>
-
-      <form
-        v-if="Data.length>0"
-        :style="isOperate ? 'max-height: 5000px' : 'max-height: 0'"
-      >
-        <p class="remark">金额单位: 万元人民币</p>
-        <!-- 年份选择 -->
-        <div class="years">
-          <p
-            title="复制第一年数据"
-            class="copy btn"
-            @click="copy"
-          >拷贝</p>
-          <div
-            class="year"
-            :class="currentYear === index ? 'active' : ''"
-            v-for="(item,index) in 3"
-            :key="index"
-            @click="currentYear=index"
-          >
-            {{Data[currentIndex][index].year === "" ? '第'+(index+1)+'年' : Data[currentIndex][index].year+"年"}}
-          </div>
-        </div>
-        <!-- 主体输入 -->
-        <div class="content">
-          <div
-            class="item"
-            v-for="item in selects"
-            :key="item.text"
-          >
-            <p>{{item.text}}</p>
-            <Select
-              :list="item.list"
-              :placeholder="item.text"
-              v-model="Data[currentIndex][currentYear][item.model]"
-              @update="update()"
-            >
-            </Select>
-          </div>
-          <div
-            v-if="index2!=0"
-            class="item"
-            v-for="(item,index2) in inputs"
-            :key="index2"
-          >
-            <p>{{item.text === "year" ? "第几年企业信息" : item.text}}</p>
-            <div class="input">
-              <input
-                type="number"
-                :placeholder="item.text === 'year' ? '第几年企业信息' : item.text"
-                min=0
-                :step="item.step"
-                v-model.number="Data[currentIndex][currentYear][item.model]"
-                @input="update()"
+              <p>{{item.text}}</p>
+              <Select
+                :list="item.list"
+                :placeholder="item.text"
+                v-model="Data[currentIndex][currentYear][item.model]"
+                @update="update()"
               >
-              <i
-                v-show="Data[currentIndex][currentYear][item.model] != ''"
-                class="iconfont icon-error"
-                @click="Data[currentIndex][currentYear][item.model]='';update()"
-              ></i>
+              </Select>
+            </div>
+            <div
+              v-if="index2!=0"
+              class="item"
+              v-for="(item,index2) in inputs"
+              :key="index2"
+            >
+              <p>{{item.text === "year" ? "第几年企业信息" : item.text}}</p>
+              <div class="input">
+                <input
+                  type="number"
+                  :placeholder="item.text === 'year' ? '第几年企业信息' : item.text"
+                  min=0
+                  :step="item.step"
+                  v-model.number="Data[currentIndex][currentYear][item.model]"
+                  @input="update()"
+                >
+                <i
+                  v-show="Data[currentIndex][currentYear][item.model] != ''"
+                  class="iconfont icon-error"
+                  @click="Data[currentIndex][currentYear][item.model]='';update()"
+                ></i>
+              </div>
             </div>
           </div>
-        </div>
-      </form>
+        </form>
 
-      <!-- 功能键 -->
-      <div class="btns">
-        <checkBox
-          class="checkBox"
-          :models="models"
-        ></checkBox>
-        <check
-          class="check"
-          v-model="is_impute"
-        ></check>
-        <button @click="submit">提交</button>
+        <!-- 功能键 -->
+        <div class="btns">
+          <checkBox
+            class="checkBox"
+            :models="models"
+          ></checkBox>
+          <check
+            class="check"
+            v-model="is_impute"
+          ></check>
+          <button @click="submit">提交</button>
+        </div>
       </div>
     </div>
 
@@ -564,48 +570,57 @@ export default {
   /* overflow-y: hidden; */
 }
 
-.info-res header {
-  padding-left: 25px;
+.info-res .content {
+  margin: 0 auto;
+  width: 100%;
+  max-width: 1000px;
+  padding: 20px 0;
 }
-.info-res header h3 {
-  display: list-item;
-  list-style: disc;
+
+.info-res .explain {
+  color: #2471a3;
 }
-.info-res header p {
+
+.info-res .explain p {
   text-indent: 2em;
 }
-.info-res header a {
-  color: var(--origin);
+.info-res .explain a {
+  color: #2471a3;
   text-decoration: underline;
 }
-.info-res header ul {
+.info-res .explain ul {
   margin-left: 2em;
   list-style: disc;
   white-space: pre-wrap;
 }
-.info-res header ul li {
+.info-res .explain ul li {
   white-space: pre-wrap;
 }
 
 .info-res .container {
-  margin: 10px 0;
-  width: 100%;
   position: relative;
   user-select: none;
 }
-
+.info-res .container .active,
+.info-res .container .btn:hover {
+  color: #ffffff;
+  background-color: #17a589;
+}
 .info-res .container .slide {
   display: flex;
   align-items: center;
   position: relative;
+  color: #17a589;
 }
 .info-res .container .slide .btn {
   margin-left: 15px;
-  border: var(--border1);
+  border: 1px solid #17a589;
   padding: 5px 10px;
   border-radius: 4px;
   cursor: pointer;
+  font-weight: 500;
 }
+
 .info-res .container .slide .id {
   margin-left: 15px;
   display: flex;
@@ -692,6 +707,7 @@ export default {
 .info-res form .years .copy {
   padding: 0 5px;
   cursor: pointer;
+  border-color: #17a589;
 }
 .info-res form .years .year {
   margin: 0 5px;
@@ -700,10 +716,6 @@ export default {
   font-size: 1.2em;
   font-weight: 500;
   cursor: pointer;
-}
-.info-res form .years .year.active {
-  color: #ffffff;
-  background-color: var(--origin);
 }
 
 .info-res form .content {
@@ -732,14 +744,14 @@ export default {
 }
 .info-res form .content .item .input input:focus,
 .info-res .container .slide .list .main input:focus {
-  border-color: var(--origin);
-  box-shadow: 0 0 5px rgba(255, 152, 69, 0.7);
+  border-color: #17a589;
+  box-shadow: 0 0 5px rgba(23, 165, 137, 0.4);
 }
 .info-res form .content .item .input i {
   position: absolute;
   margin: 0;
   right: 10px;
-  color: var(--origin);
+  color: #17a589;
   cursor: pointer;
   visibility: hidden;
 }
@@ -764,40 +776,30 @@ export default {
 .info-res .container .btns button {
   width: 30%;
   max-width: 250px;
-  background-color: var(--origin);
+  background-color: #17a589;
   transition: 0.1s;
 }
 .info-res .container .btns button:hover {
-  background-color: #f8882f;
+  filter: brightness(110%);
 }
 .info-res .container .btns button:active {
-  transform: scale(0.9);
+  transform: scale(0.98);
 }
 
-@media (max-width: 1100px) {
-  .info-res form .content {
-    grid-template-columns: repeat(3, 1fr);
-  }
+.info-res .icon-dian {
+  margin-right: 5px;
+  animation: flicker 1.5s infinite;
+  filter: brightness(110%);
 }
-@media (max-width: 900px) {
-  .info-res .container .slide .btn {
-    margin-left: 5px;
+@keyframes flicker {
+  0% {
+    opacity: 1;
   }
-  .info-res .container .slide .id {
-    margin-left: 5px;
+  50% {
+    opacity: 0;
   }
-}
-@media (max-width: 600px) {
-  .info-res .container .slide .btn {
-    margin-left: 5px;
-  }
-  .info-res form .years {
-    position: relative;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-  .info-res form .content {
-    grid-template-columns: 1fr;
+  100% {
+    opacity: 1;
   }
 }
 </style>

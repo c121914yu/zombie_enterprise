@@ -12,15 +12,6 @@
 <script>
 import Nav from './components/Nav.vue'
 export default {
-  mounted() {
-    AOS.init({
-      duration: 1000,
-      easing: 'ease-in-out',
-      delay: 100,
-      anchorPlacement: 'bottom-bottom',
-      once: true,
-    })
-  },
   components: {
     Nav,
   },

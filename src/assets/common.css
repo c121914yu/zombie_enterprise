@@ -51,28 +51,6 @@ body {
 	color: var(--dark-common);
 }
 
-button {
-	border: none;
-	outline: none;
-	padding: 5px 10px;
-	border-radius: 5px;
-	cursor: pointer;
-	color: #ffffff;
-	background-color: var(--origin);
-}
-
-button:hover {
-	background-color: #fd8d33;
-}
-
-button:active {
-	transform: scale(0.98);
-	/* 去除button点击背景样式 */
-	-webkit-user-select: none;
-	-moz-user-focus: none;
-	-moz-user-select: none;
-}
-
 input {
 	border: var(--border1);
 	padding: 7px;
@@ -129,6 +107,8 @@ h3 {
 	font-size: 1.4em;
 	font-weight: 500;
 	letter-spacing: 1px;
+	display: flex;
+	align-items: center;
 }
 
 h4 {
@@ -163,16 +143,16 @@ section {
 }
 
 table {
-	width: 100%;
 	border-collapse: collapse;
-	margin: 0 auto;
 	text-align: center;
+	background-color: transparent;
+	border-radius: 10px;
+	overflow: hidden;
+	color: #666;
 }
 
 table td,
 table th {
-	border: 1px solid #cad9ea;
-	color: #666;
 	height: 30px;
 }
 
@@ -189,29 +169,29 @@ table tr:nth-child(even) {
 	background: #F5FAFA;
 }
 
-.card {
-	background-color: #FFFFFF;
-	border-radius: 5px;
-	box-shadow: var(--box-shadow2);
-	padding: 10px;
-}
-
-.btn {
-	border: var(--border1);
+button {
+	border: none;
+	outline: none;
+	padding: 5px 10px;
 	border-radius: 5px;
 	cursor: pointer;
-}
-
-.btn:hover,
-.btn.active {
+	color: #ffffff;
 	background-color: var(--origin);
-	color: #FFFFFF;
-	border-color: var(--origin);
 }
 
-.btn:active {
-	transform: scale(0.9);
+button:hover {
+	color: #FFFFFF;
+	filter: brightness(110%)
 }
+
+button:active {
+	transform: scale(0.98);
+	/* 去除button点击背景样式 */
+	-webkit-user-select: none;
+	-moz-user-focus: none;
+	-moz-user-select: none;
+}
+
 
 .center {
 	text-align: center;

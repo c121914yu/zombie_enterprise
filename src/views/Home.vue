@@ -951,6 +951,13 @@ export default {
     },
   },
   mounted() {
+    AOS.init({
+      duration: 1000,
+      easing: 'ease-in-out',
+      delay: 100,
+      anchorPlacement: 'top-bottom',
+      once: true,
+    })
     setTimeout(() => {
       this.count_lostYear()
       this.count_loanYear()

@@ -1,55 +1,54 @@
 <template>
   <div class="result">
-    <header class="card">
-      <h3>识别结果</h3>
-      <div class="navs">
-        <div
-          class="item"
-          :class="index === currentNav ? 'active' : ''"
-          v-for="(item,index) in navs"
-          :key="item"
-          @click="currentNav=index"
-        >
-          {{item}}
+    <div style="backgroundColor:#F7F9F9">
+      <div class="content header">
+        <h3><i class="iconfont icon-dian"></i>识别结果</h3>
+        <div class="navs">
+          <div
+            class="item"
+            :class="index === currentNav ? 'active' : ''"
+            v-for="(item,index) in navs"
+            :key="item"
+            @click="currentNav=index"
+          >
+            {{item}}
+          </div>
+          <checkID
+            v-if="currentNav === 1 && zombie.length>0"
+            :zombie="zombie"
+            @changeIndex="changeIndex"
+          ></checkID>
         </div>
-        <checkID
-          v-if="currentNav === 1 && zombie.length>0"
-          :zombie="zombie"
-          @changeIndex="changeIndex"
-        ></checkID>
+        <span><strong>运行时间: {{result.time}}s</strong></span>
       </div>
-      <typeTable></typeTable>
-      <span>运行时间: {{result.time}}s</span>
-    </header>
-    <div class="charts">
-      <!-- 画像分布 -->
-      <resultDis
-        ref="distribution"
-        v-if="currentNav === 0"
-        :data="data"
-        :normal="normal"
-        :zombie="zombie"
-        :features="features"
-      ></resultDis>
-
-      <!-- 画像详情 -->
-      <resultDetail
-        ref="detail"
-        v-if="currentNav === 1 && zombie.length>0"
-        :data="[...result.data]"
-        :zombie="zombie"
-        :currentIndex="currentIndex"
-        :features="features"
-      ></resultDetail>
-
-      <!-- 多图并列 -->
-      <resultCompare
-        ref="compare"
-        v-if="currentNav === 2 && zombie.length>1"
-        :data="zombie"
-        :features="features"
-      ></resultCompare>
     </div>
+    <!-- 画像分布 -->
+    <resultDis
+      ref="distribution"
+      v-if="currentNav === 0"
+      :data="data"
+      :normal="normal"
+      :zombie="zombie"
+      :features="features"
+    ></resultDis>
+
+    <!-- 画像详情 -->
+    <resultDetail
+      ref="detail"
+      v-if="currentNav === 1 && zombie.length>0"
+      :data="[...result.data]"
+      :zombie="zombie"
+      :currentIndex="currentIndex"
+      :features="features"
+    ></resultDetail>
+
+    <!-- 多图并列 -->
+    <resultCompare
+      ref="compare"
+      v-if="currentNav === 2 && zombie.length>1"
+      :data="zombie"
+      :features="features"
+    ></resultCompare>
   </div>
 </template>
 
@@ -117,6 +116,13 @@ export default {
     this.cal_sum()
   },
   mounted() {
+    AOS.init({
+      duration: 800,
+      easing: 'ease-in-out',
+      delay: 100,
+      anchorPlacement: 'top-bottom',
+      once: true,
+    })
     this.changeNav(this.currentNav)
   },
   components: {
@@ -134,34 +140,53 @@ export default {
   position: relative;
   height: 100%;
 }
+.result .content {
+  margin: 0 auto;
+  width: 100%;
+  max-width: 1000px;
+  padding: 20px 0;
+}
 
-.result header {
+.result .header {
+  color: #7b7d7d;
   display: flex;
   align-items: flex-end;
 }
-.result header span {
+.result .header span {
   margin-left: 10px;
 }
-.result header .navs {
+.result .header .navs {
   margin-left: 15px;
   flex: 1;
   display: flex;
 }
-.result header .navs > .item {
+.result .header .navs > .item {
   margin-right: 15px;
   height: 35px;
   line-height: 35px;
   padding: 0 10px;
   cursor: pointer;
 }
-.result header .navs > .item.active {
-  background-color: var(--origin);
+.result .header .navs > .item.active {
+  background-color: #797d7f;
   color: #ffffff;
   border-radius: 5px;
 }
 
-.result .charts {
-  margin-top: 10px;
-  width: 100%;
+.result .icon-dian {
+  margin-right: 5px;
+  animation: flicker 1.5s infinite;
+  filter: brightness(110%);
+}
+@keyframes flicker {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 </style>
