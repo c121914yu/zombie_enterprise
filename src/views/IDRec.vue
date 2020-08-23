@@ -1,48 +1,51 @@
 <template>
   <div class="id-search">
-    <header class="card">
-      <p style="text-indent: 2em">
-        根据企业的唯一ID查询企业的画像，如果是第一次查询请移步
-        <router-link to="/infoRec">僵尸识别</router-link> ,
-        企业首次识别后的结果将存储在数据库中。你可以选择手动输入企业的ID或者通过csv文件导入的形式批量导入ID。
-      </p>
-      <div class="input">
-        <input
-          class="id-input"
-          type="text"
-          placeholder="输入企业ID"
-          v-model="id"
-        >
-        <button
-          class="add"
-          @click="add"
-        >添加</button>
-        <label class="file">
+    <div>
+      <header class="content">
+        <p>
+          <i class="iconfont icon-dian"></i>根据企业的唯一ID查询企业的画像，如果是第一次查询请移步
+          <router-link to="/infoRec">僵尸识别</router-link> ,
+          企业首次识别后的结果将存储在数据库中。你可以选择手动输入企业的ID或者通过csv文件导入的形式批量导入ID。
+        </p>
+        <div class="input">
           <input
-            type="file"
-            @change="checkFile"
+            class="id-input"
+            type="text"
+            placeholder="输入企业ID"
+            v-model="id"
           >
-          <span>导入</span>
-        </label>
-        <button @click="search">查询</button>
-      </div>
-      <div
-        class="id-list"
-        v-if="idList.length>0"
-      >
-        <div
-          class="item"
-          v-for="(item,index) in idList"
-          :key="index"
-        >
-          {{item}}
-          <i
-            class="iconfont icon-lajitong"
-            @click="removeID(index)"
-          ></i>
+          <button
+            class="add"
+            @click="add"
+          >添加</button>
+          <label class="file">
+            <input
+              type="file"
+              @change="checkFile"
+            >
+            <span>导入</span>
+          </label>
+          <button @click="search">查询</button>
         </div>
-      </div>
-    </header>
+        <div
+          class="id-list"
+          v-if="idList.length>0"
+        >
+          <div
+            class="item"
+            v-for="(item,index) in idList"
+            :key="index"
+          >
+            {{item}}
+            <i
+              class="iconfont icon-lajitong"
+              @click="removeID(index)"
+            ></i>
+          </div>
+        </div>
+      </header>
+    </div>
+
     <result
       v-if="resultData && resultData.data.length>0"
       :result="resultData"
@@ -215,6 +218,13 @@ export default {
 </script>
 
 <style scoped>
+.id-search .content {
+  margin: 0 auto;
+  width: 100%;
+  max-width: 1000px;
+  padding: 20px 0;
+}
+
 .id-search header {
   margin-bottom: 10px;
 }
@@ -271,5 +281,22 @@ export default {
 }
 .id-search header .id-list .item:hover i {
   display: block;
+}
+
+.id-search .icon-dian {
+  margin-right: 5px;
+  animation: flicker 1.5s infinite;
+  filter: brightness(110%);
+}
+@keyframes flicker {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 </style>
