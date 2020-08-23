@@ -661,7 +661,7 @@ export default {
   cursor: pointer;
 }
 .info-res .container .slide .id .search-list .item:hover {
-  background-color: var(--origin);
+  background-color: #17a589;
   color: #ffffff;
 }
 
