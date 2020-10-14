@@ -1,7 +1,7 @@
 <template>
   <div class="nav">
     <i class="logo iconfont icon-jiangshi"></i>
-    <h3>僵尸企业画像</h3>
+    <h3>企业画像</h3>
     <div class="list">
       <router-link
         class="item"
