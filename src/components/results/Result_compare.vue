@@ -45,8 +45,8 @@
         >
           <div v-if="i<=describes.length">
             <h3 class="center">{{describes[i-1].id}}画像</h3>
-            <li><strong>{{describes[i-1].type}}</strong>僵尸企业</li>
-            <li>判断为僵尸的概率高达 <strong>{{describes[i-1].zombie_pro}}</strong></li>
+            <li><strong>{{describes[i-1].type}}</strong>异常企业</li>
+            <li>判断为异常企业的概率高达 <strong>{{describes[i-1].zombie_pro}}</strong></li>
             <div v-html="describes[i-1].feature_des"></div>
           </div>
         </ul>
@@ -59,7 +59,7 @@
       style="backgroundColor:#EAEDED"
       v-if="describes.length>0"
     >
-      <h3 class="content"><i class="iconfont icon-dian"></i>僵尸特征色块——cnn</h3>
+      <h3 class="content"><i class="iconfont icon-dian"></i>企业风险色块——cnn</h3>
       <div class="content grid">
         <div
           class="item"
@@ -107,7 +107,7 @@
       style="backgroundColor:#FBFCFC"
       v-if="describes.length>0"
     >
-      <h3 class="content"><i class="iconfont icon-dian"></i>僵尸特征色块——stacking</h3>
+      <h3 class="content"><i class="iconfont icon-dian"></i>企业风险色块——stacking</h3>
       <div class="content grid">
         <div
           :style="i<=describes.length ? '':'opacity:0'"
@@ -310,7 +310,7 @@ export default {
         },
         yAxis: {
           type: 'value',
-          name: '僵尸程度%',
+          name: '异常程度%',
           nameTextStyle: {
             color: '#e74c3c',
             fontSize: 16,
@@ -318,7 +318,7 @@ export default {
         },
         series: [
           {
-            name: '僵尸程度',
+            name: '异常程度',
             type: 'bar',
             barWidth: '30%',
             barGap: '-100%',

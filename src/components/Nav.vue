@@ -1,7 +1,7 @@
 <template>
   <div class="nav">
     <i class="logo iconfont icon-jiangshi"></i>
-    <h3>企业画像</h3>
+    <h3>企业体检</h3>
     <div class="list">
       <router-link
         class="item"
@@ -26,9 +26,9 @@ export default {
   data() {
     return {
       navs: [
-        { text: '介绍', name: 'home', icon: 'icon-home', active: false },
+        // { text: '介绍', name: 'home', icon: 'icon-home', active: false },
         {
-          text: '僵尸识别',
+          text: '企业分析',
           name: 'infoRec',
           icon: 'icon-shibie',
           active: false,

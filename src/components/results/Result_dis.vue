@@ -23,7 +23,7 @@
 
       <!-- 僵尸程度 -->
       <div class="content degree">
-        <h4><i class="iconfont icon-dian"></i>僵尸程度统计</h4>
+        <h4><i class="iconfont icon-dian"></i>企业风险值</h4>
         <div class="list">
           <div
             class="item"
@@ -42,13 +42,11 @@
       </div>
     </div>
 
-    <div
-      style="backgroundColor:#FADBD8"
-      data-aos="zoom-out-down"
+    <div style="backgroundColor:#FADBD8"
     >
       <div class="content type">
-        <h4><i class="iconfont icon-dian"></i>僵尸类型统计</h4>
-        <p>一个企业可能会被判断为多个类型的僵尸企业。</p>
+        <h4><i class="iconfont icon-dian"></i>异常类型统计</h4>
+        <p>一个企业可能会被判断为多个类型的异常企业。</p>
         <div class="data">
           <div
             class="chart "
@@ -58,7 +56,7 @@
             <tr>
               <th>类型</th>
               <th>吸血表现</th>
-              <th colspan="2">僵尸特征描述</th>
+              <th colspan="2">异常特征描述</th>
             </tr>
             <tr
               v-for="(item,index) in degreeDescription"
@@ -81,7 +79,7 @@ export default {
     return {
       amounts: [
         { text: '正常企业', amount: 0, rate: 0 },
-        { text: '僵尸企业', amount: 0, rate: 0 },
+        { text: '异常企业', amount: 0, rate: 0 },
       ],
       degrees: [
         { text: '0-0.2', amount: 0, rate: 0 },

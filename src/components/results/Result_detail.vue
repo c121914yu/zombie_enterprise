@@ -5,8 +5,8 @@
         <div class="left">
           <ul>
             <h3><i class="iconfont icon-dian"></i>画像描述</h3>
-            <li>该企业为 <strong>{{describeInfo.type}}</strong>僵尸企业</li>
-            <li>判断为僵尸的概率高达 <strong>{{describeInfo.zombie_pro}}</strong></li>
+            <li>该企业为 <strong>{{describeInfo.type}}</strong>异常企业</li>
+            <li>判断为异常企业的概率高达 <strong>{{describeInfo.zombie_pro}}</strong></li>
             <div v-html="describeInfo.feature_des"></div>
           </ul>
           <div
@@ -18,7 +18,7 @@
           <tr>
             <th>类型</th>
             <th>吸血表现</th>
-            <th colspan="2">僵尸特征描述</th>
+            <th colspan="2">异常特征描述</th>
           </tr>
           <tr
             v-for="(item,index) in degreeDescription"
@@ -34,11 +34,11 @@
 
     <div style="backgroundColor:#F2F3F4">
       <div class="content grid">
-        <h4><i class="iconfont icon-dian"></i>僵尸特征色块</h4>
-        <p style="textIndent:1.3em">包含81个特征，每个色块代表1个特征，以透明度的大小代表影响程度的大小。</p>
+        <h4><i class="iconfont icon-dian"></i>风险分析</h4>
+        <p style="textIndent:1.3em">包含81个特征，每个色块代表1个特征，以透明度的大小代表风险的大小,颜色代表风险与优势。</p>
         <div class="item">
           <p class="center"><strong>特征影响色块-cnn模型</strong></p>
-          <p class="remark"><strong style="color: #e86452;">红色</strong>越深表示影响度越大。</p>
+          <p class="remark"><strong style="color: #e86452;">红色</strong>越深表示风险越大。</p>
           <ul class="grad-cam center">
             <li
               class="center"
@@ -54,7 +54,7 @@
         </div>
         <div class="item">
           <p class="center"><strong>特征影响色块-stacking模型</strong></p>
-          <p class="remark"><strong style="color: #e86452;">红色</strong>越深表示正影响度越大，<strong style="color: #1e9493;">绿色</strong>表示负影响度越大。</p>
+          <p class="remark"><strong style="color: #e86452;">红色</strong>越深表示风险越大，<strong style="color: #1e9493;">绿色</strong>表示优势越大。</p>
           <ul class="grad-cam center">
             <li
               class="center"
@@ -228,7 +228,7 @@ export default {
         },
         yAxis: {
           type: 'value',
-          name: '僵尸程度%',
+          name: '异常程度%',
           nameTextStyle: {
             color: '#e74c3c',
           },
@@ -241,7 +241,7 @@ export default {
         },
         series: [
           {
-            name: '僵尸程度',
+            name: '异常程度',
             type: 'bar',
             barWidth: '10%',
             barGap: '-100%',

@@ -10,7 +10,8 @@ const routes = [
 	{
 		path: '/',
 		name: 'home',
-		component: Home
+		component: Home,
+		redirect: "/infoRec"
 	},
 	{
 		path: '/infoRec',
