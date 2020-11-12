@@ -56,7 +56,7 @@
 <script>
 import { Query } from '../assets/axios/api.js'
 import result from '../components/results/Result.vue'
-import testData from '../assets/data.json'
+import testData from '../assets/data2.json'
 export default {
   data() {
     return {
