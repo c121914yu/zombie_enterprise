@@ -4,7 +4,7 @@
       <header class="content">
         <p>
           <i class="iconfont icon-dian"></i>根据企业的唯一ID查询企业的画像，如果是第一次查询请移步
-          <router-link to="/infoRec">僵尸识别</router-link> ,
+          <router-link to="/infoRec">企业分析</router-link> ,
           企业首次识别后的结果将存储在数据库中。你可以选择手动输入企业的ID或者通过csv文件导入的形式批量导入ID。
         </p>
         <div class="input">
